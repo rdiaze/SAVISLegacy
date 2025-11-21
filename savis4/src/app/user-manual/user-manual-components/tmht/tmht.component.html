@@ -1,0 +1,35 @@
+<app-navbar></app-navbar>
+
+<div class="tmht-container">
+  <!--link to grraph page-->
+    <div class = "graph-link">
+        <a
+            class = "btn problems-btn"
+            type = "button"
+            [routerLink] ="['/twomeans']"
+            target="_blank"
+            rel="noopener norefferer">
+                {{"button_toGraph"|translate}}{{"homepage_Two_Mean_Hypothesis_Testing"|translate}}
+        </a>
+    </div>
+  <h1 class="title">{{'uman_tmht_title' | translate}}</h1>
+  <div button="back" routerLink="/user-manual" class="back-button">
+      &larr; {{ 'uman_back' | translate }}
+    </div>
+  <div class="content">
+    <div class="text-section">
+      <div class="green-box">
+        <p [innerHTML]="'uman_tmht_description' | translate"></p>
+      </div>
+    </div>
+
+    <div class="image-section">
+      <img src="assets/usermanual-TMHT-1.png" alt="Chart 1" class="screenshot" style="width: 900px;" />
+      <img src="assets/usermanual-TMHT-2.png" alt="Chart 2" class="screenshot" style="width: 900px;" />
+      <img src="assets/usermanual-TMHT-3.png" alt="Chart 3" class="screenshot" style="width: 900px;" />
+    </div>  
+
+  <p></p>
+</div>
+
+<app-footer></app-footer>

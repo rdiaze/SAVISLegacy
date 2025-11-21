@@ -1,0 +1,218 @@
+.body-box{
+  min-height: 100vh;
+  background-color: var(--fifth-col);
+  padding-bottom: 50px;
+}
+
+#dot-chart-tutorial{
+  padding: 20px;
+  background-color:var(--fifth-col);
+
+    h2 {
+      color:var(--second-col);
+      margin-top: 1ch;
+      width: 100%;
+      .toggle-box {
+        float: right;
+      }
+    }
+    h1 {
+      color:var(--second-col);
+      font-weight: bold;
+      padding-top: 8px;
+    }
+    .chart-input-form {
+      color:var(--second-col);
+      display: flex;
+      .data-form {
+        color:var(--second-col);
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        width: 38ch;
+        padding: 5px;
+        margin-bottom: 10px;
+        p {
+          color:var(--second-col);
+          margin-top: 1px;
+          margin-bottom: 1px;
+          text-align: center;
+        }
+        .center-num {
+          text-align: center;
+          float: right;
+        }
+      }
+      .chart-wrap {
+        background-color: var(--eighth-col);
+        border-radius: 10px;
+        flex: 8;
+        padding: 5px;
+      }
+      label,
+      input[type="number"] {
+        background-color: var(--fifth-col);
+        color:var(--second-col);
+        height: 25px;
+        border-radius: 5px;
+        display: inline-block;
+      }
+    }
+    .btn {
+      margin-top: 1px;
+      margin-bottom: 1px;
+    }
+    textarea{
+      background-color: var(--fifth-col);
+      border: 2px solid var(--ninth-col);
+      color:var(--second-col);
+      margin: 2px;
+      width: 100%;
+      border-radius: 5px;
+      resize: none;
+    }
+    select{
+      background-color: var(--fifth-col);
+      border: 2px solid var(--ninth-col);
+      color:var(--second-col);
+      width: 100%;
+      height: 30px;
+      border-radius: 5px;
+    }
+}
+
+.btn2 {
+  background: var(--third-col);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+   background-color: var(--fourth-col);
+  }
+  #data-div {
+    display: flex;
+    flex-direction: column;
+    width: 179px;
+    justify-content: center;
+    margin-left: 10px;
+  }
+  .data-display {
+    height: 130px;
+    width: 175px;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+  }
+  &:disabled {
+    background: #bfbfbf;
+    cursor: not-allowed;
+  }
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+.green-line {
+  margin: 10px;
+  width: 100%;
+  height:4px;
+  background-color: green;
+}
+
+$primary-color: var(--seventh-col);
+$secondary-color: #93cb52;
+$slider-active-color: var(--ninth-col);
+$slider-track-color: var(--ninth-col);
+
+button, .btn {
+  background: var(--third-col);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background: var(--fourth-col);
+  }
+
+  &:disabled {
+    background: var(--ninth-col);
+    cursor: not-allowed;
+  }
+}
+
+input[type="number"] {
+  color:var(--second-col);
+  margin: 2px;
+  border: 1px solid $slider-active-color;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: rgb(185, 180, 180);
+    color: rgb(185, 180, 180);
+  }
+}
+
+input[type="checkbox"] {
+  accent-color: var(--seventh-col);
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.readonly {
+  background-color: var(--fifth-col);
+  color:var(--second-col);
+  //background-color: rgb(185, 180, 180);
+  border: 2px solid var(--ninth-col);
+  font-size: 1rem;
+  width: 100%;
+  cursor: default;
+}
+
+.static-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #000000; 
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 0; 
+}
+
+.manual-link {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.5rem 1rem 0;  
+  margin-top: 16px;
+  margin-bottom: 0.5rem;  
+}
+
+.manual-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.problems-link {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.5rem 1rem 0;  
+  margin-top: 16px;
+  margin-bottom: 0.5rem;  
+}
+
+.problems-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}

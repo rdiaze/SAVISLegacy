@@ -1,0 +1,169 @@
+.outer {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--fifth-col);;
+    overflow: hidden;
+}
+.container{
+    margin-top: 10%;
+}
+
+.panel-heading {
+    font-size: 30px;
+    text-align: center;
+    color: #54c242;
+}
+
+.title {
+    font-size: 30px;
+    text-align: center;
+    color: #54c242;
+}
+
+.header{
+    margin: 0;
+    background-color: #333;
+    height: 80px;
+    width: 100%;
+    text-align: center;
+}
+
+.static-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #000000; 
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0; 
+  }
+  
+.font-weight-bold{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#forget {
+    padding-top: 10px;
+    margin-top: 20px;
+    min-width: 100px;
+    margin-left: auto;
+    text-decoration: none;
+    cursor: pointer;
+    color: #54c242;
+    color: #54c242;
+    text-decoration: none;
+    
+    &:hover {
+      color: #388e3c;
+      text-decoration: underline;
+    }
+}
+.custom-padding {
+    padding-top: 0px; 
+}
+
+
+A:hover {
+    text-decoration: none;
+}
+
+.form-inline label {
+    padding-left: 10px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.btn {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    border: none;
+    border-radius: 15px;
+    background-color: #54c242;
+    color: #fff;
+    padding: 15px 40px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn:hover {
+    background-color: #388e3c;
+}
+
+.panel {
+    box-shadow: 20px 0px 90px rgba(84, 194, 66, 0.5);
+    border-radius: 12px;
+    background-color: #fff;
+    padding: 20px;
+    margin: auto;
+    width: 100%;
+    max-width: 300px;
+    max-height: 100vh;
+    overflow: hidden;
+    align-self: center;
+}
+
+.input-field {
+    border-radius: 20px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: 2px solid #54c242;
+    color: gray;
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+
+.input-field.error {
+    border: 2px solid red;
+    color: red;
+}
+
+input[type='email'],
+input[type='password'],
+input[type='text'] {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    width: calc(100% - 40px); 
+    padding: 8px;
+    margin-bottom: 10px;
+}
+.text-danger {
+    color: red;
+   
+}
+
+.language {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top:30px;
+    width: 100%;
+    text-align: center;
+
+    ::ng-deep span {
+        color: #54c242 !important;
+    }
+}
+
+p {
+    color: #54c242;
+}
+
+.modeSwitcher{
+    height: 10%;
+    width:10%;
+    right:-25px;
+    bottom: 25px;
+    position: fixed;
+    cursor:pointer;
+}

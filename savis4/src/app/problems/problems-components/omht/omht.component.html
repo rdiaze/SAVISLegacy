@@ -1,0 +1,39 @@
+<app-navbar></app-navbar>
+
+<div class="omht-container">
+  <h1 class="title">{{'problems_omht_title' | translate}}</h1>
+  <div button="back" routerLink="/problems" class="back-button">
+      &larr; {{ 'problems_back' | translate }}
+    </div>
+  <div class="content">
+    <div class="text-section">
+      <div class="green-box">
+        <p [innerHTML]="problems[currentProblemIndex].question"></p>
+      </div>
+      <!--textbox for user to type their answer-->
+      <textarea class="textbox" rows="1" placeholder="Type the answer here" [(ngModel)]="inputAnswer"></textarea>
+      <!--submit button-->
+      <button class="submit-button" (click)="submitAnswer()">{{ 'problems_submit' | translate }}</button>
+      <button class="submit-button" (click)="nextQuestion()">{{ 'problems_generator' | translate }}</button>
+      <!--show if user answer is correct or incorrect-->
+      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
+        <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again'}}</p>
+        <p *ngIf = "!answerIsCorrect">
+          Correct answer: {{ correctAnswer }}
+        </p>
+        <!--hide answer button-->
+        <button (click) = "hideAnswer()" class="hide-button">{{ 'problems_hide' | translate }}</button>
+      </div>
+    </div>
+
+    <!--left side of the page-->
+    <!--add blank bar chart-->
+    <div class ="chart container">
+      <canvas #inputChart width="950" height="600"></canvas>
+    </div>
+  </div>
+</div>
+
+<footer class="static-footer">
+  {{ "nav_copyright" | translate }}
+</footer>

@@ -1,0 +1,664 @@
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core'
+import { TranslateService } from '@ngx-translate/core'
+import { Chart } from 'chart.js'
+import { SharedService } from '../../services/shared.service'
+import type { Paragraph, Table } from 'docx';
+
+/**
+ * 
+
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
+import { Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell, WidthType, AlignmentType } from 'docx'
+import * as FileSaver from 'file-saver'
+ */
+
+interface FrequencyDataRow {
+  index: number;
+  category: any;
+  absFreq: number;
+  relFreq: string;
+}
+
+
+
+
+
+@Component({
+  selector: 'app-bar-chart',
+  templateUrl: './bar-chart.component.html',
+  styleUrls: ['./bar-chart.component.scss']
+})
+export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
+  @ViewChild('inputChart') chartCanvas: ElementRef<HTMLCanvasElement>
+  @ViewChild('sampleChart') sampleCanvas: ElementRef<HTMLCanvasElement>
+  @ViewChild('input_data_display') inputDataDisplay: ElementRef<HTMLDivElement>
+  @ViewChild('input_data_table') inputDataTable: ElementRef<HTMLTableElement>
+  @ViewChild('sample_data_display') sampleDataDisplay: ElementRef<HTMLDivElement>
+  @ViewChild('sample_data_table') sampleDataTable: ElementRef<HTMLTableElement>
+  @ViewChild('fileInput', { static: false }) fileInput: ElementRef
+
+  inputDataSizeNum: string = 'NaN'
+  sampleDataSizeNum: string = 'NaN'
+  inputErrorMsg = ''
+  sampleErrorMsg = ''
+  csvTextArea: string = ''
+  sampleSizeInput: number = 1
+  inputDataArray: any[] = []
+  dataCategoryArray: any[] = []
+  sampleDataArray: any[] = []
+  datasets: any[] = [
+    {
+      label: this.translate.instant('barChart_inputdata'),
+      borderColor: "orange",
+      backgroundColor: "orange",
+      data: []
+    },
+    {
+      label: this.translate.instant('barChart_sample_drawn'),
+      borderColor: 'blue',
+      backgroundColor: 'blue',
+      data: []
+    }
+  ]
+
+  inputChart: Chart
+  sampleChart: Chart
+
+  constructor(
+    private translate: TranslateService,
+    private sharedService: SharedService
+  ) { }
+
+  /**
+   * On init subscribe to the shared service data
+   */
+  ngOnInit(): void {
+    this.sharedService.currentData.subscribe(data => this.csvTextArea = data)
+  }
+
+  /**
+   * After View Init Lifecycle Hook
+   */
+  ngAfterViewInit():void {
+    this.createInputChart()
+    this.createSampleChart()
+  }
+
+  createInputChart(): void {
+    const context = this.chartCanvas.nativeElement.getContext('2d')
+    if (context) {
+      this.inputChart = new Chart(context, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [
+            this.datasets[0]
+          ]
+        },
+        options: {
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  min: 0,
+                  max: 1,
+                  stepSize: 0.1,
+                  beginAtZero: true,
+                  fontColor: 'black',
+                  fontSize: 14,
+                  fontStyle: 'bold'
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: this.translate.instant('barChart_proportions'),
+                  fontColor: 'black',
+                  fontSize: 14,
+                  fontStyle: 'bold'
+                }
+              }
+            ],
+            xAxes: [
+              {
+                ticks: {
+                  minRotation: 45,
+                  maxRotation: 45,
+                  fontColor: 'black',
+                  fontSize: 14,
+                  fontStyle: 'bold'
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: this.translate.instant('barChart_categories'),
+                  fontColor: 'black',
+                  fontSize: 14,
+                  fontStyle: 'bold'
+                }
+              }
+            ]
+          },
+          responsive: true,
+          maintainAspectRatio: true
+        }
+      })
+    }
+  }
+
+  createSampleChart(): void {
+    const context = this.sampleCanvas.nativeElement.getContext('2d')
+    if (context) {
+      this.sampleChart = new Chart(context, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [
+            this.datasets[1]
+          ]
+        },
+        options: {
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  min: 0,
+                  max: 1,
+                  stepSize: 0.1,
+                  beginAtZero: true,
+                  fontColor: 'black',
+                  fontSize: 14,
+                  fontStyle: 'bold'
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: this.translate.instant('barChart_proportions'),
+                  fontColor: 'black',
+                  fontSize: 14,
+                  fontStyle: 'bold'
+                }
+              }
+            ],
+            xAxes: [
+              {
+                ticks: {
+                  minRotation: 45,
+                  maxRotation: 45,
+                  fontColor: 'black',
+                  fontSize: 14,
+                  fontStyle: 'bold'
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: this.translate.instant('barChart_categories'),
+                  fontColor: 'black',
+                  fontSize: 14,
+                  fontStyle: 'bold'
+                }
+              }
+            ]
+          },
+          responsive: true,
+          maintainAspectRatio: true
+        }
+      })
+    }
+  }
+
+  /**
+   * Selector for the samples, fetches the sample data and updates the text area
+   * @param e event
+   */
+  sampleSelect(e: any) {
+    let link = ''
+    if(e.target.value == "sample1") {
+      link = '../../../assets/barSample1.csv'
+    } else {
+      link = '../../../assets/barSample2.csv'
+    }
+    fetch(link).then(data => data.text())
+      .then((data) => {
+        this.csvTextArea = data
+      })
+  }
+
+  loadDataButton() {
+    this.inputDataArray = this.csvTextArea.split(/\r?\n+|\r+/).filter(
+      (x: any) => /\w+/.test(x)
+    ).map((x, index) => ({
+      id: index + 1,
+      value: x.match(/-?\w*\.?\w+/)[0]
+    }))
+
+    if (this.inputDataArray.length) {
+      this.loadInputData()
+    } else {
+      this.totalReset()
+    }
+  }
+
+  totalReset() {
+    this.inputDataArray = []
+    this.dataCategoryArray = []
+    this.sampleDataArray = []
+    this.datasets[0].data = []
+    this.datasets[1].data = []
+    this.inputDataSizeNum = 'NaN'
+    this.sampleDataSizeNum = 'NaN'
+    this.csvTextArea = ''
+    this.fileInput.nativeElement.value = ''
+    this.inputDataDisplay.nativeElement.innerHTML = ''
+    this.sampleDataDisplay.nativeElement.innerHTML = ''
+    this.inputDataTable.nativeElement.innerText = ''
+    this.sampleDataTable.nativeElement.innerText = ''
+    this.clearChart(this.inputChart)
+    this.clearChart(this.sampleChart)
+    console.log("reset")
+  }
+
+  resetSampleChart() {
+    this.sampleDataArray = []
+    this.datasets[1].data = []
+    this.clearChart(this.sampleChart)
+   
+  }
+
+  updateSampleData() {
+    this.sampleErrorMsg = ''
+    try {
+      if(!this.inputDataArray.length) throw new Error('No input data')
+      const { chosen } = this.randomSubset(this.inputDataArray, this.sampleSizeInput)
+      this.sampleDataArray = chosen
+    } catch (error) {
+      this.sampleErrorMsg = 'ERROR\n'
+    }
+    this.updateData(1)
+  }
+
+  /**
+   * Load Input Data
+   */
+  loadInputData() {
+    this.resetSampleChart()
+    this.inputErrorMsg = ''
+    let valuesArr = [...this.inputDataArray.map(x => x.value)]
+    this.dataCategoryArray = this.sortAlphaNumString([... new Set(valuesArr)])
+    console.log(this.dataCategoryArray)
+    try {
+      if(this.dataCategoryArray.length > 16) throw new Error('Too many categories')
+      this.updateData(0)
+    } catch (error) {
+      console.log(this.dataCategoryArray.length)
+      alert('ERROR: Only 16 categories are supported')
+    }
+   
+  }
+
+  /**
+   * Sets the Maximum Scale for the Chart
+   * @param num number
+   * @returns number
+   */
+  setMaxScale(num: any) {
+    if (num < 1) return Math.floor((num - Math.floor(num)) * 10)/10 + 0.1
+    else return 1
+  }
+
+  /**
+   * Updates the data in the chart
+   * @param num number
+   */
+  updateData(num: any){
+    let chart, dataArray, dataDisplay
+
+    if(num === 0) {
+      chart = this.inputChart
+      dataArray = this.inputDataArray
+      dataDisplay = this.inputDataDisplay
+      this.inputDataSizeNum = this.inputDataArray.length.toString()
+      this.inputDataTable.nativeElement.style.fontWeight = 'bold'
+      this.inputDataTable.nativeElement.innerText = this.translate.instant('barChart_frequency_table')
+    } else {
+      chart = this.sampleChart
+      dataArray = this.sampleDataArray
+      dataDisplay = this.sampleDataDisplay
+      this.sampleDataSizeNum = this.sampleDataArray.length.toString()
+      this.sampleDataTable.nativeElement.style.fontWeight = 'bold'
+      this.sampleDataTable.nativeElement.innerText = this.translate.instant('barChart_frequency_table')
+    }
+
+    let valuesArr   = [...dataArray.map(x => x.value)]
+    let contValues  = this.dataCategoryArray.map(x => (
+      valuesArr.filter(val => (x===val)).length
+    ))
+    let relativesVal = [
+      ...contValues.map(x => this.roundToPlaces(x/valuesArr.length, 4))
+    ]
+
+    this.updateChartData(chart, this.dataCategoryArray, relativesVal)
+    this.setScale(chart, 0, this.setMaxScale(this.maxInArray(relativesVal)))
+
+    const tableElement = dataDisplay.nativeElement
+    tableElement.innerHTML = ''
+
+    const tableHead = document.createElement('thead')
+    tableHead.style.textAlign = 'left'
+    const headerRow = document.createElement('tr')
+    const headersTable = [
+      'Idx',
+      this.translate.instant('barChart_category'),
+      this.translate.instant('barChart_absol_freq'),
+      this.translate.instant('barChart_rel_freq')
+    ]
+
+
+    headersTable.forEach(x => {
+      const tHead = document.createElement("th")
+      tHead.innerText = x
+      tHead.style.padding = '8px'
+      tHead.style.border = '1px solid #000'
+      tHead.style.textAlign = 'left'
+      headerRow.appendChild(tHead)
+  })
+
+    tableHead.appendChild(headerRow)
+    const bodyTable = document.createElement('tbody')
+
+    this.dataCategoryArray.forEach((val, idx) => {
+      const rowData = document.createElement("tr")
+      const tableRow = [idx+1, val, contValues[idx], relativesVal[idx].toFixed(4)]
+
+      tableRow.forEach(x => {
+          const element = document.createElement("td")
+          element.innerText = x
+          element.style.padding = '8px'
+          element.style.border = '1px solid #000'
+          element.style.textAlign = 'left'
+          rowData.appendChild(element)
+      })
+
+      bodyTable.appendChild(rowData)
+    })
+
+    const table = document.createElement('table')
+    table.appendChild(tableHead)
+    table.appendChild(bodyTable)
+    table.style.widows = '100%'
+    table.style.borderCollapse = 'collapse'
+
+    tableElement.appendChild(table)
+  }
+
+  /**
+   * Gets a random number between two numbers
+   * @param from starting number
+   * @param to ending number
+   * @returns number
+   */
+  randomInt(from: any, to: any) {
+    return Math.floor((to - from) * Math.random() + from)
+  }
+
+  /**
+   * Random Subset
+   * @param itr iterable
+   * @param n number
+   * @returns object
+   */
+  randomSubset(itr: any, n: any) {
+    let result = Array(n)
+    let unchosen = []
+    let seen = 0
+
+    for(let item of itr) {
+      if (seen < n) {
+        result[seen] = item
+      }
+      else if (Math.random() < n / (seen + 1)) {
+        let replaceIdx = this.randomInt(0, n)
+        unchosen.push(result[replaceIdx])
+        result[replaceIdx] = item
+      } else {
+        unchosen.push(item)
+      }
+
+      seen += 1
+    }
+    if (seen < n) {
+      throw new Error('not enough elements')
+    }
+    return { chosen: result, unchosen }
+  }
+
+  /**
+   * Sorts an array of strings in alphanumeric order
+   * @param rawData array
+   * @returns array
+   */
+  sortAlphaNumString(rawData: any) {
+    let numbers = rawData.filter((x: any) => !isNaN(Number(x))).sort((a: any, b: any)=>a-b).map((x: any) => `${Number(x)}`)
+    let strings = rawData.filter((x: any) => isNaN(Number(x))).sort( (a: any, b: any) => a.localeCompare(b))
+    return numbers.concat(strings)
+  }
+
+  /**
+   * Clears the chart
+   * @param chart chart
+   */
+  clearChart(chart: Chart): void {
+    chart.data.labels = [];
+    chart.data.datasets[0].data = [];
+    chart.options.scales.yAxes[0].ticks.max = 1;
+    chart.update()
+  }
+
+  /**
+   * Rounds a number to a certain number of decimal places
+   * @param value number
+   * @param places number
+   * @returns number
+   */
+  roundToPlaces(value: any, places: any) {
+    let pow10 = Math.pow(10, places)
+    return Math.round(value * pow10) / pow10
+  }
+
+  /**
+   * Gets the maximum value in an array
+   * @param arr array
+   * @returns number
+   */
+  maxInArray(arr: any) {
+    if(!arr) return undefined
+    return arr.reduce((acc: any, x: any) => {
+      return acc > x ? acc : x
+    }, arr[0])
+  }
+
+  /**
+   * updates the chart data
+   * @param chart chart
+   * @param labels chart labels
+   * @param contElements chart data
+   */
+  updateChartData(chart: any, labels: any, contElements: any) {
+    chart.data.labels = labels
+    chart.data.datasets[0].data = contElements
+    chart.update()
+  }
+
+  /**
+   * Sets the scale of the chart
+   * @param chart chart
+   * @param floor number
+   * @param ceil number
+   */
+  setScale(chart: any, floor: any, ceil: any) {
+    chart.options.scales.yAxes[0].ticks.min = floor
+    chart.options.scales.yAxes[0].ticks.max = ceil
+    chart.update()
+  }
+  
+  /**
+   * Checks if the input data size is NaN
+   * @returns boolean
+   */
+  isInputDataSizeNumNaN(): boolean {
+    return isNaN(Number(this.inputDataSizeNum))
+  }
+
+  /**
+   * Checks if the sample data size is NaN
+   * @returns boolean
+   */
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click()
+  }
+
+  /**
+   * When user inputs a file, upload the file data into the input area
+   * @param input csvFile
+   */
+  onFileSelect(input: Event): void {
+    const target = input.target as HTMLInputElement;
+    const file = target.files?.[0]
+
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        this.csvTextArea = e.target?.result as string
+      };
+      reader.readAsText(file)
+    }
+  }
+
+
+  /**
+   * Helper function to generate frequency data for tables.
+   */
+  private generateFrequencyData(dataArray: any[]): FrequencyDataRow[] {
+    if (!dataArray || dataArray.length === 0) return [];
+    const valuesArr = [...dataArray.map(x => x.value)];
+    const contValues = this.dataCategoryArray.map(x => valuesArr.filter(val => (x === val)).length);
+    const relativesVal = contValues.map(x => this.roundToPlaces(x / valuesArr.length, 4));
+    return this.dataCategoryArray.map((val, idx) => ({
+      index: idx + 1,
+      category: val,
+      absFreq: contValues[idx],
+      relFreq: relativesVal[idx].toFixed(4)
+    }));
+  }
+
+  /**
+   * Helper function to create a DOCX table from frequency data.
+   */
+  private createDocxTable(tableData: FrequencyDataRow[]): Promise<any> {
+    return import('docx').then(({ Table, TableRow, TableCell, Paragraph, TextRun, WidthType }) => {
+        const header = new TableRow({
+            children: [
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Index', bold: true })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Category', bold: true })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Absolute Frequency', bold: true })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Relative Frequency', bold: true })] })] }),
+            ],
+        });
+
+        const rows = tableData.map(row => new TableRow({
+            children: [
+                new TableCell({ children: [new Paragraph(String(row.index))] }),
+                new TableCell({ children: [new Paragraph(String(row.category))] }),
+                new TableCell({ children: [new Paragraph(String(row.absFreq))] }),
+                new TableCell({ children: [new Paragraph(String(row.relFreq))] }),
+            ],
+        }));
+        
+        return new Table({ rows: [header, ...rows], width: { size: 100, type: WidthType.PERCENTAGE } });
+    });
+  }
+
+  async exportInputAsPDF(): Promise<void> {
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+
+      const doc = new jsPDF();
+      doc.setFontSize(16).text('Bar Chart - Input Data Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      const imgData = this.inputChart.toBase64Image();
+      const canvas = this.chartCanvas.nativeElement;
+      const imgHeight = (canvas.height * 170) / canvas.width;
+      doc.addImage(imgData, 'PNG', 15, 25, 170, imgHeight);
+      
+      const tableData = this.generateFrequencyData(this.inputDataArray);
+      autoTable(doc, {
+        startY: 35 + imgHeight,
+        head: [['Index', 'Category', 'Absolute Frequency', 'Relative Frequency']],
+        body: tableData.map((row: FrequencyDataRow) => [row.index, row.category, row.absFreq, row.relFreq]),
+      });
+      doc.save('bar-chart-input-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  async exportInputAsDOCX(): Promise<void> {
+    const { Document, Packer, Paragraph, TextRun, ImageRun, Table, AlignmentType } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    const children: (Paragraph | Table)[] = [new Paragraph({ children: [new TextRun({ text: 'Bar Chart - Input Data Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER })];
+    const imgData = this.inputChart.toBase64Image();
+    children.push(new Paragraph({ children: [new ImageRun({ type: "png", data: imgData.split(',')[1], transformation: { width: 500, height: 250 } })] }));
+    
+    const tableData = this.generateFrequencyData(this.inputDataArray);
+    // FIX: Added 'await' to wait for the table to be created before pushing it.
+    const docxTable = await this.createDocxTable(tableData);
+    children.push(docxTable);
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'bar-chart-input-export.docx'));
+  }
+
+  async exportSampleAsPDF(): Promise<void> {
+    if (this.sampleDataArray.length === 0) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+
+      const doc = new jsPDF();
+      doc.setFontSize(16).text('Bar Chart - Sample Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      const imgData = this.sampleChart.toBase64Image();
+      const canvas = this.sampleCanvas.nativeElement;
+      const imgHeight = (canvas.height * 170) / canvas.width;
+      doc.addImage(imgData, 'PNG', 15, 25, 170, imgHeight);
+      
+      const tableData = this.generateFrequencyData(this.sampleDataArray);
+      autoTable(doc, {
+        startY: 35 + imgHeight,
+        head: [['Index', 'Category', 'Absolute Frequency', 'Relative Frequency']],
+        body: tableData.map((row: FrequencyDataRow) => [row.index, row.category, row.absFreq, row.relFreq]),
+      });
+      doc.save('bar-chart-sample-export.pdf');
+    } catch (error) { console.error("Failed to generate sample PDF:", error); }
+  }
+
+  async exportSampleAsDOCX(): Promise<void> {
+    if (this.sampleDataArray.length === 0) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, Table, AlignmentType } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    const children: (Paragraph | Table)[] = [new Paragraph({ children: [new TextRun({ text: 'Bar Chart - Sample Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER })];
+    const imgData = this.sampleChart.toBase64Image();
+    children.push(new Paragraph({ children: [new ImageRun({ type: "png", data: imgData.split(',')[1], transformation: { width: 500, height: 250 } })] }));
+    
+    const tableData = this.generateFrequencyData(this.sampleDataArray);
+    
+    const docxTable = await this.createDocxTable(tableData);
+    children.push(docxTable);
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'bar-chart-sample-export.docx'));
+  }
+
+
+  /**
+   * When feature is closed, clear the data in shared service
+   */
+  ngOnDestroy(): void {
+    this.sharedService.changeData('')
+  }
+}

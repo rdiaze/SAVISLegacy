@@ -1,0 +1,609 @@
+.correlation-container {
+  min-height: 100vh;
+  padding: 40px;
+  padding-bottom: 80px;
+  background-color: var(--fifth-col);
+
+  .title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: var(--second-col);
+    font-weight: bold;
+  }
+
+  .back-button {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    color: beige;
+    text-decoration: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-block;
+    background-color: var(--third-col);
+    border: none;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: var(--fourth-col);
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+
+    .text-section {
+      flex: 1;
+      max-width: 45%;
+
+      h2, h3 {
+        margin: 0;
+        padding-bottom: 10px;
+        color: var(--second-col);
+      }
+
+      .green-box {
+        background-color: #e1f3dc;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        line-height: 1.6;
+
+        .instructions-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+          gap: 15px;
+          flex-wrap: wrap;
+        }
+
+        h3 {
+          margin: 0;
+          font-size: 1.3rem;
+          color: #2d5016;
+          flex: 1;
+        }
+
+        .question-type-selector {
+          display: flex;
+          align-items: center;
+        }
+
+        .question-type-dropdown {
+          padding: 8px 12px;
+          font-size: 1rem;
+          border: 2px solid var(--third-col);
+          border-radius: 8px;
+          background-color: white;
+          color: var(--second-col);
+          cursor: pointer;
+          font-weight: 600;
+          min-width: 220px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            border-color: var(--fourth-col);
+            background-color: #f8f9fa;
+          }
+
+          &:focus {
+            outline: none;
+            border-color: var(--fourth-col);
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
+          }
+        }
+
+        p {
+          margin: 0;
+          color: #333;
+        }
+
+        ul {
+          margin: 10px 0;
+          padding-left: 20px;
+          
+          li {
+            margin: 5px 0;
+          }
+        }
+      }
+    }
+
+    .chart-container {
+      flex: 1;
+      max-width: 55%;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 600px;
+
+      canvas {
+        background-color: var(--eighth-col);
+        border-radius: 10px;
+        width: 100% !important;
+        max-width: 700px;
+        height: 500px !important;
+        max-height: 500px;
+      }
+
+      .chart-helper {
+        margin-top: 15px;
+        padding: 10px 15px;
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 6px;
+        text-align: center;
+        
+        p {
+          margin: 0;
+          color: #856404;
+          font-size: 0.95rem;
+        }
+      }
+    }
+  }
+}
+
+// Generate New Dataset Button
+.generate-button {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  background-color: var(--third-col);
+  color: beige;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: var(--fourth-col);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Input Section
+.input-section {
+  margin-bottom: 20px;
+
+  .input-group {
+    margin-bottom: 18px;
+
+    label {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--second-col);
+      margin-bottom: 8px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: var(--third-col);
+      }
+
+      &:disabled {
+        background-color: #f0f0f0;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      option {
+        padding: 10px;
+      }
+    }
+  }
+}
+
+// Submit Button
+.submit-button {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  background-color: var(--third-col);
+  color: beige;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: var(--fourth-col);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Feedback Section
+.feedback-section {
+  margin-top: 25px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  border: 2px solid #dee2e6;
+
+  .coefficient-display {
+    text-align: center;
+    padding: 15px;
+    background-color: var(--third-col);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    .coefficient-label {
+      margin: 0 0 5px 0;
+      color: beige;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .coefficient-value {
+      margin: 0;
+      color: beige;
+      font-size: 1.8rem;
+      font-weight: 700;
+      font-family: 'Courier New', monospace;
+    }
+  }
+
+  .feedback-box {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 2px solid;
+    transition: all 0.3s ease;
+
+    &.correct {
+      background-color: #d4edda;
+      border-color: #28a745;
+      
+      .feedback-title {
+        color: #155724;
+        
+        span {
+          color: #28a745;
+          font-size: 1.3rem;
+          margin-right: 8px;
+        }
+      }
+      
+      .feedback-message {
+        color: #155724;
+      }
+    }
+
+    &.incorrect {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+      
+      .feedback-title {
+        color: #721c24;
+        
+        span {
+          color: #dc3545;
+          font-size: 1.3rem;
+          margin-right: 8px;
+        }
+      }
+      
+      .feedback-message {
+        color: #721c24;
+      }
+    }
+
+    .feedback-title {
+      margin: 0 0 8px 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+    }
+
+    .feedback-message {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5;
+
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Try Again Button
+.try-again-button {
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  background-color: var(--third-col);
+  color: beige;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: var(--fourth-col);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Simple Data Table for Calculate Question
+.simple-dataset-display {
+  margin: 15px 0;
+  
+  .simple-data-table {
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    thead {
+      background-color: var(--third-col);
+      color: beige;
+    }
+
+    th {
+      padding: 10px 15px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #e0e0e0;
+        
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: #f8f9fa;
+        }
+      }
+
+      td {
+        padding: 8px 15px;
+        text-align: center;
+        font-size: 1rem;
+        color: var(--second-col);
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.instruction-text {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1rem;
+}
+
+.formula-box {
+  background-color: #f0f0f0;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin: 15px 0;
+  border-left: 4px solid var(--third-col);
+  font-size: 0.95rem;
+  color: #333;
+  text-align: center;
+}
+
+.answer-label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--second-col);
+}
+
+// Calculation Steps for Calculate Question
+.calculation-steps {
+  margin-top: 20px;
+
+  .step-box {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 2px solid #dee2e6;
+
+    .step-label {
+      margin: 0 0 8px 0;
+      font-size: 1rem;
+      color: var(--second-col);
+    }
+
+    .step-hint {
+      margin: 5px 0 10px 0;
+      font-size: 0.9rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    .step-hint-small {
+      margin: 5px 0 10px 0;
+      font-size: 0.85rem;
+      color: #888;
+      font-style: italic;
+    }
+
+    .step-input {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: var(--third-col);
+        box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
+      }
+
+      &:disabled {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+      }
+
+      &.correct {
+        border-color: #28a745;
+        background-color: #d4edda;
+      }
+
+      &.incorrect {
+        border-color: #dc3545;
+        background-color: #f8d7da;
+      }
+    }
+  }
+}
+
+// Coefficient Input for Calculate Question
+.coefficient-input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1.1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--third-col);
+    box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
+  }
+
+  &:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+  }
+}
+
+// Coefficient Select for Calculate Question (introductory)
+.coefficient-select {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  margin-top: 10px;
+  background-color: white;
+  color: var(--second-col);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--third-col);
+    box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
+  }
+
+  &:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+  }
+}
+
+// Footer
+.static-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .correlation-container .content {
+    flex-direction: column;
+    
+    .text-section,
+    .chart-container {
+      max-width: 100%;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .correlation-container {
+    padding: 20px;
+    
+    .title {
+      font-size: 2rem;
+    }
+    
+    .generate-button,
+    .submit-button,
+    .try-again-button {
+      max-width: 100%;
+    }
+  }
+}
+

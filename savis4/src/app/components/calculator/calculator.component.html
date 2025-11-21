@@ -1,0 +1,42 @@
+<!-- parent calculator container -->
+<div
+  #calculatorContainer
+  class="calculator-container"
+  [style.width.px]="width"
+  [style.height]="'auto'"
+  [style.minHeight.px]="height"
+  
+>
+    <!-- calculator header container 
+     used to allow dragging-->
+  <div class="calculator-header"
+    (mousedown)="onMouseDown($event)"
+  (touchstart)="onTouchStart($event)">
+    </div>
+<!-- button to toggle advanced mode on/off -->
+<button
+    class="advanced-toggle"
+    (click)="toggleAdvancedMode(); $event.stopPropagation()"
+    [attr.aria-pressed]="advancedMode"
+  >
+    {{ advancedMode ? 'Advanced Mode: On' : 'Advanced Mode: Off' }}
+  </button>
+<!-- display calculator inputs/outputs-->
+  <div class="display">
+    {{ displayValue }}
+  </div>
+<!-- class for all calculator buttons -->
+  <div class="buttons">
+    <div *ngFor="let row of buttons" class="button-row">
+      <button
+        *ngFor="let btn of row"
+        (click)="onButtonClick(btn.action)"
+        [class.is-active-operator]="isOperator(btn.action) && operator === btn.action"
+      >
+        {{ btn.label }}
+      </button>  
+    </div>
+  </div>
+<!-- bottom right hand corner resize button -->
+  <div class="resize-handle" (mousedown)="onResizeStart($event)"></div>
+</div>

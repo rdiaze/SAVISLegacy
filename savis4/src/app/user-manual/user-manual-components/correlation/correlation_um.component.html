@@ -1,0 +1,35 @@
+<app-navbar></app-navbar>
+
+<div class="correlation-container">
+    <!--link to grraph page-->
+    <div class = "graph-link">
+        <a
+            class = "btn problems-btn"
+            type = "button"
+            [routerLink] ="['/correlation']"
+            target="_blank"
+            rel="noopener norefferer">
+                {{"button_toGraph"|translate}}{{"homepage_Correlation_Visualization"|translate}}
+        </a>
+    </div>
+  <h1 class="title">{{'uman_correlation_title' | translate}}</h1>
+  <div button="back" routerLink="/user-manual" class="back-button">
+      &larr; {{ 'uman_back' | translate }}
+    </div>
+  <div class="content">
+    <div class="text-section">
+      <div class="green-box">
+        <p [innerHTML]="'uman_correlation_description' | translate"></p>
+      </div>
+    </div>
+
+    <div class="image-section">
+      <img src="assets/User-Manual-Correlation-Image1.png" alt="Correlation Feature Screenshot 1" class="screenshot" style="width: 900px;" />
+      <img src="assets/User-Manual-Correlation-Image2.png" alt="Correlation Feature Screenshot 2" class="screenshot" style="width: 900px;" />
+      <img src="assets/User-Manual-Correlation-Image3.png" alt="Correlation Feature Screenshot 3" class="screenshot" style="width: 900px;" />
+    </div>  
+
+  <p></p>
+</div>
+
+<app-footer></app-footer>

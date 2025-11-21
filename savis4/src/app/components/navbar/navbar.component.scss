@@ -1,0 +1,105 @@
+.modeSwitcher{
+    height: 10%;
+    width:10%;
+    right:-25px;
+    bottom: 25px;
+    position: fixed;
+    cursor:pointer;
+}
+
+.calcSwitcher {
+    position: absolute;
+    cursor:pointer;
+    width: 3%;
+    top: 80px;
+    margin-bottom: 100px;
+}
+
+/* Calculator container */
+.calculator-container {
+    position: fixed;
+    top: 80px;
+    left: 20px;
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    pointer-events: auto;
+}
+
+/* Switch styles */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #93cb52;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #93cb52;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 20px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Label styles */
+.switch + span, span + .switch {
+    vertical-align: middle;
+    margin: 5px;
+}
+
+span {
+    color: white;
+    border: none;
+    box-shadow: none;
+    margin-left: 2px;
+    font-size: 12px;
+}
+
+.resize-handle {
+  border-bottom-right-radius: 12px;
+  background: linear-gradient(135deg, transparent 60%, #888 100%);
+}

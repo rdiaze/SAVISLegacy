@@ -1,0 +1,33 @@
+<app-navbar></app-navbar>
+
+<div class="regression-container">
+      <!--link to grraph page-->
+    <div class = "graph-link">
+        <a
+            class = "btn problems-btn"
+            type = "button"
+            [routerLink] ="['/LR']"
+            target="_blank"
+            rel="noopener norefferer">
+                {{"button_toGraph"|translate}}{{"homepage_Linear_Regression_Visualization"|translate}}
+        </a>
+    </div>
+  <h1 class="title">{{'uman_regression_title' | translate}}</h1>
+  <div button="back" routerLink="/user-manual" class="back-button">
+      &larr; {{ 'uman_back' | translate }}
+    </div>
+  <div class="content">
+    <div class="text-section">
+      <div class="green-box">
+        <p [innerHTML]="'uman_regression_description' | translate"></p>
+      </div>
+    </div>
+
+    <div class="image-section">
+      <img src="assets/regression.png" alt="Chart 1" class="screenshot" style="width: 900px;" />
+    </div>  
+
+  <p></p>
+</div>
+
+<app-footer></app-footer>

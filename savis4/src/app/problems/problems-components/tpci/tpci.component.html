@@ -1,0 +1,188 @@
+<app-navbar></app-navbar>
+
+<div class="tpci-container">
+  <h1 class="title">{{'problems_tpci_title' | translate}}</h1>
+  <div button="back" routerLink="/problems" class="back-button">
+      &larr; {{ 'problems_back' | translate }}
+    </div>
+  <div class="content">
+    <div class="text-section">
+      <!--word problem in the green box-->
+      <div class="green-box">
+        <h3>Calculate the Confidence Interval</h3>
+        <p>{{wordProblem}}</p>
+      </div>
+
+      <!--button to generate new problem-->
+      <button class="generate-button" (click)="generateNewProblem()">{{ 'problems_generator' | translate }}</button>
+
+      <!--user input for sample proportion for group A-->
+      <div class = "text">
+        <p>1. Calculate the sample proportion for teeangers</p>
+      </div>
+      <div class = "answer-box">
+        <input type="text" class="textbox2" placeholder = "sample proportion" [(ngModel)] = "userSampleProportion1">
+      </div>
+
+      <!--user input for sample proportion for group B-->
+      <div class = "text">
+        <p>2. Calculate the sample proportion for adults</p>
+      </div>
+      <div class = "answer-box">
+        <input type="text" class="textbox3" placeholder = "sample proportions" [(ngModel)] = "userSampleProportion2">
+      </div>
+
+      <!--user input for difference in sample proportion-->
+      <div class = "text">
+        <p>3. Calculate the difference between the sample proportions for teenagers and adults</p>
+      </div>
+      <div class = "answer-box">
+        <input type="text" class="textbox4" placeholder = " different in sample proportions" [(ngModel)] = "userDiffProportion">
+      </div>
+
+      <!--user input for margin error-->
+      <div class = "text">
+        <p>4. Calculate the margin error</p>
+      </div>
+      <div class = "answer-box">
+        <input type="text" class="textbox5" placeholder = " margin error" [(ngModel)] = "userMarginError">
+      </div>
+
+      <!--user input for confidence interval-->
+      <div class = "text">
+        <p>5. Calculate the confidence interval</p>
+      </div>
+      <div class = "answer-box">
+        <span class = "parenthesis">(</span>
+        <input type="text" class = "textbox" placeholder = "lower bound" [(ngModel)] = "userAnswerLower">
+        <span class = "comma">,</span>
+        <input type="text" class = "textbox1" placeholder = "upper bound" [(ngModel)] = "userAnswerUpper">
+        <span class = "parenthesis">)</span>
+      </div>
+
+      <!--submit button-->
+      <button class = "submit-button" (click)="submitAnswer()">{{ 'problems_submit' | translate }}</button>
+
+      <!--feedback section-->
+      <div *ngIf = "showAnswer" class = "feedback-section">
+
+        <!--check group A sample proportion answer-->
+        <div class = "feedback-box" [ngClass] = "isSamplePropCorrect1? 'correct' : 'incorrect'">
+          <p class = "feedback-title">
+            <span *ngIf = "isSamplePropCorrect1">✓ 1. Calculate the Sample Proportion for teenagers</span>
+            <span *ngIf = "!isSamplePropCorrect1">✗ 1. Calculate the Sample Proportion for teenagers</span>
+          </p>
+          <p *ngIf = "isSamplePropCorrect1" class="feedback-message">
+            Correct!
+          </p>
+          <p *ngIf = "!isSamplePropCorrect1" class="feedback-message">
+            Incorrect! Try again!
+            <br>
+            <strong>Correct Sample Proportion for teenagers:</strong> {{ correctSampleProportion1 }}
+          </p>
+        </div>
+
+        <!--check group B sample proportion answer-->
+        <div class = "feedback-box" [ngClass] = "isSamplePropCorrect2? 'correct' : 'incorrect'">
+          <p class = "feedback-title">
+            <span *ngIf = "isSamplePropCorrect2">✓ 2. Calculate the Sample Proportion for adults</span>
+            <span *ngIf = "!isSamplePropCorrect2">✗ 2. Calculate the Sample Proportion for adults</span>
+          </p>
+          <p *ngIf = "isSamplePropCorrect2" class="feedback-message">
+            Correct!
+          </p>
+          <p *ngIf = "!isSamplePropCorrect2" class="feedback-message">
+            Incorrect! Try again!
+            <br>
+            <strong>Correct Sample Proportion for adults:</strong> {{ correctSampleProportion2 }}
+          </p>
+        </div>
+
+        <!--check different in sample proportions answer-->
+        <div class = "feedback-box" [ngClass] = "isDiffPropCorrect? 'correct' : 'incorrect'">
+          <p class = "feedback-title">
+            <span *ngIf = "isDiffPropCorrect">✓ 3. Calculate the Difference between the Sample Proportions</span>
+            <span *ngIf = "!isDiffPropCorrect">✗ 3. Calculate the Difference between the Sample Proportions</span>
+          </p>
+          <p *ngIf = "isDiffPropCorrect" class="feedback-message">
+            Correct!
+          </p>
+          <p *ngIf = "!isDiffPropCorrect" class="feedback-message">
+            Incorrect! Try again!
+            <br>
+            <strong>Correct Difference between the Sample Proportions:</strong> {{ correctDiffProportion }}
+          </p>
+        </div>
+
+        <!--check margin error answer-->
+        <div class = "feedback-box" [ngClass] = "isMarginErrorCorrect? 'correct' : 'incorrect'">
+          <p class = "feedback-title">
+            <span *ngIf = "isMarginErrorCorrect">✓ 3. Calculate the Margin Error</span>
+            <span *ngIf = "!isMarginErrorCorrect">✗ 3. Calculate the Margin Error</span>
+          </p>
+          <p *ngIf = "isMarginErrorCorrect" class="feedback-message">
+            Correct!
+          </p>
+          <p *ngIf = "!isMarginErrorCorrect" class="feedback-message">
+            Incorrect! Try again!
+            <br>
+            <strong>Correct Margin Error:</strong> {{ correctMarginError }}
+          </p>
+        </div>
+
+        <!--check confidence interval answer-->
+        <div class = "feedback-box" [ngClass] = "(isLowerCorrect && isUpperCorrect)? 'correct' : 'incorrect'">
+          <p class = "feedback-title">
+            <span *ngIf = "isLowerCorrect && isUpperCorrect">✓ 4. Calculate the Confidence Interval</span>
+            <span *ngIf = "!(isLowerCorrect && isUpperCorrect)">✗ 4. Calculate the Confidence Interval</span>
+          </p>
+          <p *ngIf = "isLowerCorrect && isUpperCorrect" class="feedback-message">
+            Correct!
+          </p>
+          <p *ngIf = "!(isLowerCorrect && isUpperCorrect)" class="feedback-message">
+            Incorrect! Try again!
+            <br>
+            <strong>Correct Confidence Interval:</strong> ({{ correctAnswerLower}}, {{ correctAnswerUpper }})
+          </p>
+        </div>
+
+        <!--hide answer button-->
+        <button *ngIf = "showAnswer" (click) = "hideAnswer()" class="hide-button">{{ 'problems_hide' | translate }}</button>
+      </div>
+
+    </div>
+
+    <!--left side of the page-->
+    <!--add blank bar chart-->
+    <div class ="chart-container">
+      <canvas #chart1 width="1100" height="600"></canvas>
+    </div>
+  </div>
+
+  <!--workspace-->
+  <div class="workspace-container">
+  <h2>Workspace</h2>
+  <div class="canvas-wrapper">
+    <canvas id="drawingCanvas" width="1000" height="500" style="border:1px solid #000000;"></canvas>
+    <textarea id="textOverlay" class="text-overlay" placeholder="Click to type..." aria-label="Workspace text overlay"></textarea>
+  </div>
+  <div class="workspace-controls">
+      <div class="color-buttons">
+        <button class="color-button black" data-color="#000000"></button>
+        <button class="color-button red" data-color="#FF0000"></button>
+        <button class="color-button green" data-color="#00FF00"></button>
+        <button class="color-button blue" data-color="#0000FF"></button>
+        <button class="color-button yellow" data-color="#FFFF00"></button>
+      </div>
+      <div class="mode-buttons">
+        <button id="drawButton" class="workspace-button active">Draw</button>
+        <button id="textButton" class="workspace-button">Text</button>
+        <button id="eraserButton" class="workspace-button">Eraser</button>
+        <button id="clearButton" class="workspace-button">Clear All</button>
+      </div>
+    </div>
+</div>
+
+<footer class="static-footer">
+  {{ "nav_copyright" | translate }}
+</footer>
