@@ -52,7 +52,7 @@ export class DotChartComponent implements AfterViewInit, OnInit, OnDestroy {
 
   meanSymbol: string = 'μ'
   stdSymbol: string = 'σ'
-  sizeSymbol: string = 'n'
+  sizeSymbol: string = 'N'
 
   disabledInput: boolean = true
   sampleMeanDisabled: boolean = true

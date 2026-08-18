@@ -53,11 +53,11 @@
       <br>
       <!-- Export buttons -->
       <div>
-        <button class="btn" id="export-pdf-btn" (click)="exportAsPDF()" [disabled]="demodata1.length === 0">Export as PDF</button>
+        <button class="btn" id="export-pdf-btn" (click)="exportAsPDF()" [disabled]="demodata1.length === 0">{{ 'export_pdf' | translate }}</button>
       </div>
       <br>
       <div>
-        <button class="btn" id="export-docx-btn" (click)="exportAsDOCX()" [disabled]="demodata1.length === 0">Export as DOCX</button>
+        <button class="btn" id="export-docx-btn" (click)="exportAsDOCX()" [disabled]="demodata1.length === 0">{{ 'export_docx' | translate }}</button>
       </div>
     </div>
   </form>

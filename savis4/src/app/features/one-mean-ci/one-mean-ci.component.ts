@@ -615,7 +615,7 @@ export class OneMeanCIComponent implements OnInit, AfterViewInit, OnDestroy {
             `${(idx + 1).toString().padEnd(8, ' ')}` + 
             `${x.toString().padEnd(8, ' ')}` + 
             `${this.sampleStds[idx].toString().padEnd(25, ' ')}\n`,
-          `ID`.padEnd(8, ' ') + `mean`.padEnd(8, ' ') + `s\n`
+          `ID`.padEnd(8, ' ') + `${this.translate.instant('omci_Mean')}`.padEnd(8, ' ') + `s\n`
         );
       }
 

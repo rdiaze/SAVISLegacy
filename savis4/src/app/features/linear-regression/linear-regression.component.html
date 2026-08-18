@@ -35,10 +35,10 @@
           
           <!-- Export buttons -->
           <div class="form-group mt-3">
-            <button class="btn" id="export-pdf-btn" (click)="exportAsPDF()" [disabled]="parsedDatapoints.length === 0">Export as PDF</button>
+            <button class="btn" id="export-pdf-btn" (click)="exportAsPDF()" [disabled]="parsedDatapoints.length === 0">{{ 'export_pdf' | translate }}</button>
           </div>
           <div class="form-group mt-3">
-            <button class="btn" id="export-docx-btn" (click)="exportAsDOCX()" [disabled]="parsedDatapoints.length === 0">Export as DOCX</button>
+            <button class="btn" id="export-docx-btn" (click)="exportAsDOCX()" [disabled]="parsedDatapoints.length === 0">{{ 'export_docx' | translate }}</button>
           </div>
           <app-save-load-buttons 
             [data]="datapoints"

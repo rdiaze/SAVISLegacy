@@ -51,8 +51,8 @@
             </div>
           </div>
           <div class="export-buttons mt-3">
-            <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsPDF()" [disabled]="!isDataLoaded">Export as PDF</button>
-            <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsDOCX()" [disabled]="!isDataLoaded">Export as DOCX</button>
+            <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsPDF()" [disabled]="!isDataLoaded">{{ 'export_pdf' | translate }}</button>
+            <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsDOCX()" [disabled]="!isDataLoaded">{{ 'export_docx' | translate }}</button>
           </div>
         </div>
         <div class="rhs w-9/12">
@@ -92,8 +92,8 @@
             <span summary="sampleProportioniff">{{sampleProportionDiff_chart2}} </span>
           </div>
           <div class="export-buttons mt-3">
-            <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsPDF()" [disabled]="!isSimRun">Export as PDF</button>
-            <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsDOCX()" [disabled]="!isSimRun">Export as DOCX</button>
+            <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsPDF()" [disabled]="!isSimRun">{{ 'export_pdf' | translate }}</button>
+            <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsDOCX()" [disabled]="!isSimRun">{{ 'export_docx' | translate }}</button>
           </div>
         </div>
       </div>
@@ -161,8 +161,8 @@
             <span summary="proportion">{{propextremediff_chart3}}</span>
           </div>
           <div class="export-buttons mt-3">
-            <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsPDF()" [disabled]="simulations.length === 0">Export as PDF</button>
-            <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsDOCX()" [disabled]="simulations.length === 0">Export as DOCX</button>
+            <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsPDF()" [disabled]="simulations.length === 0">{{ 'export_pdf' | translate }}</button>
+            <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsDOCX()" [disabled]="simulations.length === 0">{{ 'export_docx' | translate }}</button>
           </div>
         </div>
       </div>

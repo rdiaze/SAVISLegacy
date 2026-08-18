@@ -41,10 +41,10 @@
 
                 <div class="d-flex justify-content-center mt-2">
                     <div class="form-group mx-1">
-                        <button class="btn" (click)="exportInputAsPDF()" [disabled]="inputDataArray.length === 0">Export as PDF</button>
+                        <button class="btn" (click)="exportInputAsPDF()" [disabled]="inputDataArray.length === 0">{{ 'export_pdf' | translate }}</button>
                     </div>
                     <div class="form-group mx-1">
-                        <button class="btn" (click)="exportInputAsDOCX()" [disabled]="inputDataArray.length === 0">Export as DOCX</button>
+                        <button class="btn" (click)="exportInputAsDOCX()" [disabled]="inputDataArray.length === 0">{{ 'export_docx' | translate }}</button>
                     </div>
                 </div>
     
@@ -86,10 +86,10 @@
             
                 <div class="d-flex justify-content-center mt-2">
                     <div class="form-group mx-1">
-                        <button class="btn" (click)="exportSampleAsPDF()" [disabled]="sampleDataArray.length === 0">Export as PDF</button>
+                        <button class="btn" (click)="exportSampleAsPDF()" [disabled]="sampleDataArray.length === 0">{{ 'export_pdf' | translate }}</button>
                     </div>
                     <div class="form-group mx-1">
-                        <button class="btn" (click)="exportSampleAsDOCX()" [disabled]="sampleDataArray.length === 0">Export as DOCX</button>
+                        <button class="btn" (click)="exportSampleAsDOCX()" [disabled]="sampleDataArray.length === 0">{{ 'export_docx' | translate }}</button>
                     </div>
                 </div>
             
@@ -146,10 +146,10 @@
 
                 <div class="d-flex justify-content-center mt-2">
                     <div class="form-group mx-1">
-                        <button class="btn" (click)="exportMeansAsPDF()" [disabled]="sampleMeans.length === 0">Export as PDF</button>
+                        <button class="btn" (click)="exportMeansAsPDF()" [disabled]="sampleMeans.length === 0">{{ 'export_pdf' | translate }}</button>
                     </div>
                     <div class="form-group mx-1">
-                        <button class="btn" (click)="exportMeansAsDOCX()" [disabled]="sampleMeans.length === 0">Export as DOCX</button>
+                        <button class="btn" (click)="exportMeansAsDOCX()" [disabled]="sampleMeans.length === 0">{{ 'export_docx' | translate }}</button>
                     </div>
                 </div>
 

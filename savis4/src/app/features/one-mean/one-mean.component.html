@@ -33,8 +33,8 @@
                 </div>
 
                 <div class="export-buttons mt-3">
-                    <button class="btn mb-2 w-full" (click)="exportInputDataAsPDF()" [disabled]="!isDataLoaded">Export as PDF</button>
-                    <button class="btn w-full" (click)="exportInputDataAsDOCX()" [disabled]="!isDataLoaded">Export as DOCX</button>
+                    <button class="btn mb-2 w-full" (click)="exportInputDataAsPDF()" [disabled]="!isDataLoaded">{{ 'export_pdf' | translate }}</button>
+                    <button class="btn w-full" (click)="exportInputDataAsDOCX()" [disabled]="!isDataLoaded">{{ 'export_docx' | translate }}</button>
                 </div>
                 
             </div>
@@ -74,8 +74,8 @@
                 <button class="btn" id="get-sample-btn" (click)="runSimulationButton()" [disabled]="disabledInput">{{ 'dotPlot_run_sim' | translate }}</button>
                 <p id="run-sim-error-msg"></p>
                 <div class="export-buttons mt-3">
-                    <button class="btn mb-2 w-full" (click)="exportSampleDataAsPDF()" [disabled]="sampleDataArray.length === 0">Export as PDF</button>
-                    <button class="btn w-full" (click)="exportSampleDataAsDOCX()" [disabled]="sampleDataArray.length === 0">Export as DOCX</button>
+                    <button class="btn mb-2 w-full" (click)="exportSampleDataAsPDF()" [disabled]="sampleDataArray.length === 0">{{ 'export_pdf' | translate }}</button>
+                    <button class="btn w-full" (click)="exportSampleDataAsDOCX()" [disabled]="sampleDataArray.length === 0">{{ 'export_docx' | translate }}</button>
                 </div>
             </div>
 
@@ -122,13 +122,13 @@
 
                 <br>
 
-                <p>{{ 'dotPlot_proportions_of_samples' | translate }}:</p>
+                <p>{{ 'one_mean_proportions_of_samples' | translate }}:</p>
                 <p>{{ sampleMeansChosen }}</p>
-                <p>{{ 'dotPlot_proportions_of_samples_unchosen' | translate }}:</p>
+                <p>{{ 'one_mean_proportions_of_samples_unchosen' | translate }}:</p>
                 <p>{{ sampleMeansUnchosen }}</p>
                 <div class="export-buttons mt-3">
-                    <button class="btn mb-2 w-full" (click)="exportDistributionAsPDF()" [disabled]="sampleMeans.length === 0">Export as PDF</button>
-                    <button class="btn w-full" (click)="exportDistributionAsDOCX()" [disabled]="sampleMeans.length === 0">Export as DOCX</button>
+                    <button class="btn mb-2 w-full" (click)="exportDistributionAsPDF()" [disabled]="sampleMeans.length === 0">{{ 'export_pdf' | translate }}</button>
+                    <button class="btn w-full" (click)="exportDistributionAsDOCX()" [disabled]="sampleMeans.length === 0">{{ 'export_docx' | translate }}</button>
                 </div>
 
             </div>
@@ -139,7 +139,7 @@
                     class="readonly"
                     id="sample-means-display"
                 >{{ sampleMeansDisplay }}</textarea>
-                <p>{{ 'dotPlot_means_of_samples' | translate }}: </p>
+                <p>{{ 'one_mean_means_of_samples' | translate }}: </p>
                 <p>{{ sampleMeansMean }}</p>
                 <p>{{ 'dotPlot_std_of_samples' | translate }}: </p>
                 <p>{{ sampleMeansStd }}</p>

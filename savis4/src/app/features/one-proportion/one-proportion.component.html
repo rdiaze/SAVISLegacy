@@ -58,8 +58,8 @@
 
 
         <div class="export-buttons mt-3">
-            <button class="mb-2" (click)="exportAsPDF()" [disabled]="totalSamples === 0">Export as PDF</button>
-            <button (click)="exportAsDOCX()" [disabled]="totalSamples === 0">Export as DOCX</button>
+            <button class="mb-2" (click)="exportAsPDF()" [disabled]="totalSamples === 0">{{ 'export_pdf' | translate }}</button>
+            <button (click)="exportAsDOCX()" [disabled]="totalSamples === 0">{{ 'export_docx' | translate }}</button>
         </div>
 
       
