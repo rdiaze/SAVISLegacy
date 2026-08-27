@@ -23,14 +23,12 @@
                 <div class="stats">
                     <div>
                     <span>{{ 'opc_propSuccess' | translate }}</span>
-                    <span>{{ proportion | number : '1.4-4' }}</span>
+                    <span>{{ proportion | number : '1.2-2' }}</span>
                     </div>
                 </div>
                 <br><br>
             </div>
             <div class="rhs">
-                <label>{{ numsuccess }} {{ 'opc_success' | translate }}</label>
-                <label>{{ numfailure }} {{ 'opc_failure' | translate }}</label> 
                 <div class="chart-wrap">
                     <canvas baseChart
                         [datasets]="barChartData1"
@@ -61,7 +59,7 @@
                 <div class="stats">
                     <div>
                         <span>{{ 'opc_propSims' | translate }}</span>
-                        <span>{{ sampleProportion | number : '1.4-4' }}</span>
+                        <span>{{ sampleProportion | number : '1.2-2' }}</span>
                     </div>
                 </div>
             </div>
@@ -134,19 +132,19 @@
                 <div class="stats">
                     <div class="my-4">
                         <span>{{ 'opc_mean' | translate }}</span>
-                        <span>{{ mean | number : '1.4-4'}}</span>
+                        <span>{{ mean | number : '1.2-2'}}</span>
                     </div>
                     <div class="my-4">
                         <span>{{ 'opc_stddev' | translate }}</span>
-                        <span>{{ stddev | number : '1.4-4'}}</span>
+                        <span>{{ stddev | number : '1.2-2'}}</span>
                     </div>
                     <div class="my-4">
                         <span>{{ 'opc_lower' | translate }}</span>
-                        <span>{{ lower | number : '1.4-4'}}</span>
+                        <span>{{ lower | number : '1.2-2'}}</span>
                     </div>
                     <div class="my-4">
                         <span>{{ 'opc_upper' | translate }}</span>
-                        <span>{{ upper | number : '1.4-4'}}</span>
+                        <span>{{ upper | number : '1.2-2'}}</span>
                     </div>
                     <div class="my-4">
                         <span>{{ 'opc_total' | translate }}</span>

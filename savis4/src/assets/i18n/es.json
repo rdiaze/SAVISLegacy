@@ -98,7 +98,7 @@
     "op_bar_selected": "Seleccionadas",
     "op_bar_heads": "Número de éxitos en",
     "op_bar_heads2": "ensayos",
-    "op_bar_num_samples": "Número de éxitos",
+    "op_bar_num_samples": "Frecuencia de número de éxitos",
     "//one_proportion_confidence_interval": "These are the translations for the One Proportion Confidence Interval component",
     "opc_title": "Intervalo de Confianza de Una Proporción",
     "opc_data": "Introducir Datos",

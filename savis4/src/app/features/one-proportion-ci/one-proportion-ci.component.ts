@@ -113,6 +113,9 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
 
   public barChartOptions1: any={
     responsive: true,
+    legend: {
+      display: false,
+    },
     tooltips: {
       callbacks: {
         title: () => {
@@ -300,7 +303,7 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
       alert('The value of successes and failures must be greater than 0');
     }
     else {
-      let proportion = this.calculateProportion(numsuccess, numfailure);
+      let proportion = MathService.roundToPlaces(this.calculateProportion(numsuccess, numfailure), 2);
       this.proportion = proportion;
       let summary = {
          numsuccess, numfailure,
@@ -378,6 +381,9 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
 
   private defaultChartOptions: any={
     responsive: true,
+    legend: {
+      display: false,
+    },
     tooltips: {
       callbacks: {
         label: (tooltipItem: any, data: any) => {
@@ -555,7 +561,7 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
       const { chosen } = SamplingService.randomSubset(shuffled, totalElements);
       const samplesuccess = MathService.countWhere(chosen, (data: number) => data == 1);
       const samplefailure = totalElements - samplesuccess;
-      let sampleProportion: number = MathService.roundToPlaces(samplesuccess / totalElements, 4);
+      let sampleProportion: number = MathService.roundToPlaces(samplesuccess / totalElements, 2);
       this.sampleProportion = sampleProportion;
 
       const successPercentagee = (samplesuccess / totalElements) * 100;
@@ -585,8 +591,8 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
       this.barChartData2[0].data[simIdx] = MathService.roundToPlaces(successPercentagee, 2);
       this.barChartData2[1].data[simIdx] = MathService.roundToPlaces(failurePercentagee, 2);
     }
-    this.mean = MathService.mean(this.simulations);
-    this.stddev = MathService.stddev(this.simulations);
+    this.mean = MathService.roundToPlaces(MathService.mean(this.simulations), 2);
+    this.stddev = MathService.roundToPlaces(MathService.stddev(this.simulations), 2);
     this.total = this.simulations.length;
     this.buildci();
     
@@ -609,8 +615,8 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
         return val >= temp[lower] &&  val <= temp[upper >= temp.length ? upper - 1: upper]
       })
 
-      this.lower = temp[lower]
-      this.upper = temp[upper >= temp.length ? upper - 1: upper]
+      this.lower = MathService.roundToPlaces(temp[lower], 2)
+      this.upper = MathService.roundToPlaces(temp[upper >= temp.length ? upper - 1: upper], 2)
 
       this.setDataFromRaw(this.chart3, [chosen, unchosen])
       this.scaleToStackDots(this.chart3)
@@ -627,8 +633,8 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
         this.predicateForTail(this.minTailValInput, this.maxTailValInput)
       )
 
-      this.upper = this.maxTailValInput
-      this.lower = this.minTailValInput
+      this.upper = MathService.roundToPlaces(this.maxTailValInput, 2)
+      this.lower = MathService.roundToPlaces(this.minTailValInput, 2)
 
       this.setDataFromRaw(this.chart3, [dataCustomChart.chosen, dataCustomChart.unchosen])
       this.scaleToStackDots(this.chart3)
@@ -755,8 +761,8 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
   }
 
   updateInfoSampleMeans(totalChosen: number, totalUnchosen: number) {
-    const proportionChosen = MathService.roundToPlaces(totalChosen / this.total, 4)
-    const proportionUnchosen = MathService.roundToPlaces(totalUnchosen / this.total, 4)
+    const proportionChosen = MathService.roundToPlaces(totalChosen / this.total, 2)
+    const proportionUnchosen = MathService.roundToPlaces(totalUnchosen / this.total, 2)
 
     this.sampleMeansChosen = `${totalChosen} / ${this.total} = ${proportionChosen}`
     this.sampleMeansUnchosen = `${totalUnchosen} / ${this.total} = ${proportionUnchosen}`

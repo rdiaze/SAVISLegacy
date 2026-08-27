@@ -117,6 +117,25 @@ export class OneProportionComponent implements AfterViewInit, OnChanges{
   }
 
   /**
+   * Update chart axis labels to reflect current trial count and translations.
+   */
+  private updateAxisLabels(): void {
+    if (!this.chart?.options?.scales) {
+      return
+    }
+
+    const xAxis = this.chart.options.scales.xAxes?.[0]
+    if (xAxis?.scaleLabel) {
+      xAxis.scaleLabel.labelString = `${this.translate.instant('op_bar_heads')} ${this.noOfCoin} ${this.translate.instant('op_bar_heads2')}`
+    }
+
+    const yAxis = this.chart.options.scales.yAxes?.[0]
+    if (yAxis?.scaleLabel) {
+      yAxis.scaleLabel.labelString = this.translate.instant('op_bar_num_samples')
+    }
+  }
+
+  /**
    * Create the chart and set the chart settings
    */
   createChart(): void {
@@ -172,7 +191,7 @@ export class OneProportionComponent implements AfterViewInit, OnChanges{
                 },
                 scaleLabel: {
                   display: true,
-                  labelString: this.translate.instant('op_bar_num_samples'),
+                  labelString: '',
                   // fontColor: 'black',
                   // fontSize: 14
                 }
@@ -180,10 +199,9 @@ export class OneProportionComponent implements AfterViewInit, OnChanges{
             ],
             xAxes: [
               {
-                // barPercentage: 1.0,
                 scaleLabel: {
                   display: true,
-                  labelString: `${this.translate.instant('op_bar_heads')} ` + this.noOfCoin + ` ${this.translate.instant('op_bar_heads2')}`,
+                  labelString: '',
                   // fontColor: 'black',
                   // fontSize: 14
                 }
@@ -223,6 +241,7 @@ export class OneProportionComponent implements AfterViewInit, OnChanges{
     }
 
     (this.chart as any).mean = this.mean
+    this.updateAxisLabels()
 
     // Event listener for double click to zoom in and out
     this.chart.canvas.ondblclick = () => {
@@ -302,6 +321,7 @@ export class OneProportionComponent implements AfterViewInit, OnChanges{
     this.interval = this.calculateSamplesSelected()
     this.proportion = `${this.interval}/${this.totalSamples} = ${(this.interval / this.totalSamples).toFixed(3)}`
 
+    this.updateAxisLabels()
     this.chart.update()
   }
 
@@ -341,6 +361,7 @@ export class OneProportionComponent implements AfterViewInit, OnChanges{
 
     this.chart.data.datasets[0].data = this.samples
     this.chart.data.datasets[1].data = this.binomialData
+    this.updateAxisLabels()
     this.chart.update()
   }
 
@@ -559,9 +580,7 @@ export class OneProportionComponent implements AfterViewInit, OnChanges{
 
     (this.chart as CustomChart).mean = this.mean
 
-    if (this.chart && this.chart.options && this.chart.options.scales && this.chart.options.scales.xAxes && this.chart.options.scales.xAxes[0] && this.chart.options.scales.xAxes[0].scaleLabel) {
-      this.chart.options.scales.xAxes[0].scaleLabel.labelString = `${this.translate.instant('op_bar_heads')} ` + this.upperSelectedRange + ` ${this.translate.instant('op_bar_heads2')}`;
-    }
+    this.updateAxisLabels()
 
     this.chart.update()
 
