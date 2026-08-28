@@ -47,6 +47,12 @@
   .rhs {
     flex-grow: 1;
     min-width: 0;
+
+    h6 {
+      color: var(--second-col);
+      font-size: 19px;
+      margin: 0.25rem 0;
+    }
   }
 
   .lhs p, label{
@@ -55,38 +61,11 @@
     font-size: 19px;
   }
 
-  .rhs{
-    p{
-      color:var(--second-col);
-      input[type=number]{
-            width:10%;
-          }
-      margin-left: 60rem;
-      margin-top: 1rem;
-      font-size: 19px;
-    }
-    label{
-      margin-left: 32rem;
-      margin-top: -10rem;
-      font-size: 19px;
-    }
-    h6{
-      margin-left: 34rem;
-      margin-top: 4rem;
-      font-size: 19px;
-    }
-  }
-
-  .l{
-    color:var(--second-col);
-    margin-left: 27rem;
-    margin-top: -16rem;
+  .l {
+    color: var(--second-col);
     font-size: 19px;
     text-decoration: underline;
-  }
-
-  h6{
-    color:var(--second-col);
+    margin-bottom: 0.5rem;
   }
 
   .chart-wrap {
@@ -101,20 +80,21 @@
   .chart-wrap2 {
     background-color: var(--eighth-col);
     border-radius: 10px;
-    width: 50%;
-    height: 250px;
-    margin-top: -13rem;
-    margin-left: 40rem;
+    width: 100%;
+    max-width: 40em;
+    height: 10em;
+    margin-top: 0.5rem;
     margin-bottom: 1rem;
   }
 
   .chart-wrap3 {
     background-color: var(--eighth-col);
     border-radius: 10px;
-    width: 75%;
+    width: 100%;
+    max-width: 40em;
     height: 100%;
+    min-height: 20em;
     margin-top: 1rem;
-    margin-left: 10rem;
   }
 
   input:not([type="range"]){
