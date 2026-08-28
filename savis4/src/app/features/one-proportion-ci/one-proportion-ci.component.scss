@@ -72,23 +72,21 @@
   }
 
   .chart-wrap,
-  .chart-wrap2 {
+  .chart-wrap2,
+  .chart-wrap3 {
     background-color: var(--eighth-col);
     border-radius: 10px;
-    flex: 1 1 auto;
     width: 100%;
-    min-height: 320px;
-    padding: 0.75rem;
+    min-height: 45vh;
+    height: 45vh;
+    padding: 0.5rem;
     position: relative;
-    display: flex;
-    flex-direction: column;
 
+    canvas,
     ::ng-deep > div,
     ::ng-deep canvas {
-      flex: 1 1 auto;
       width: 100% !important;
       height: 100% !important;
-      max-width: 100%;
     }
   }
 
@@ -102,19 +100,7 @@
   }
 
   .chart-wrap3 {
-    background-color: var(--eighth-col);
-    border-radius: 10px;
-    width: 100%;
-    min-height: 45vh;
-    height: 45vh;
     margin-top: 1rem;
-    padding: 0.5rem;
-    position: relative;
-
-    canvas {
-      width: 100% !important;
-      height: 100% !important;
-    }
   }
 
   input:not([type="range"]){
