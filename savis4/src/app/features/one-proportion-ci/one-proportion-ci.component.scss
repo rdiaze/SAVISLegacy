@@ -6,8 +6,9 @@
 
 .one-proportion-ci{
   background-color:var(--fifth-col);
-  padding-left: 3rem;
-  padding-bottom: 50px;
+  padding: 0 3rem 50px;
+  width: 100%;
+  box-sizing: border-box;
   .title2{
     padding: 2rem;
     text-align: center;
@@ -30,8 +31,9 @@
     margin-bottom: 2em;
     display: flex;
     flex-flow: row nowrap;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 2em;
+    width: 100%;
   }
 
   .lhs, .rhs {
@@ -42,11 +44,12 @@
   .lhs {
     margin-left: 1em;
     width: 26em;
-    flex-shrink: 0;
+    flex: 0 0 26em;
   }
   .rhs {
-    flex-grow: 1;
+    flex: 1 1 0;
     min-width: 0;
+    align-self: stretch;
 
     h6 {
       color: var(--second-col);
@@ -72,20 +75,25 @@
   .chart-wrap2 {
     background-color: var(--eighth-col);
     border-radius: 10px;
+    flex: 1 1 auto;
     width: 100%;
-    min-height: 280px;
-    height: 280px;
-    padding: 0.5rem;
+    min-height: 320px;
+    padding: 0.75rem;
     position: relative;
+    display: flex;
+    flex-direction: column;
 
-    canvas {
+    ::ng-deep > div,
+    ::ng-deep canvas {
+      flex: 1 1 auto;
       width: 100% !important;
       height: 100% !important;
+      max-width: 100%;
     }
   }
 
   .chart-wrap {
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
   }
 
   .chart-wrap2 {
