@@ -204,7 +204,7 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit, OnDestro
   ngAfterViewInit() {
     this.createChart3()
     this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
-      this.updateChartTranslations()
+      setTimeout(() => this.updateChartTranslations(), 0)
     })
   }
 
@@ -212,20 +212,61 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit, OnDestro
     this.langChangeSubscription?.unsubscribe()
   }
 
-  private updateBarChartAxisLabels(options: any): void {
-    const xAxis = options?.scales?.xAxes?.[0]?.scaleLabel
-    const yAxis = options?.scales?.yAxes?.[0]?.scaleLabel
+  private updateBarChartAxisLabels(options: any): any {
+    const xLabel = this.translate.instant('opc_data_xaxis')
+    const yLabel = this.translate.instant('opc_percentage')
+    return {
+      ...options,
+      scales: {
+        ...options.scales,
+        xAxes: options.scales.xAxes.map((axis: any, index: number) =>
+          index === 0
+            ? {
+                ...axis,
+                scaleLabel: {
+                  ...axis.scaleLabel,
+                  display: true,
+                  labelString: xLabel,
+                },
+              }
+            : axis
+        ),
+        yAxes: options.scales.yAxes.map((axis: any, index: number) =>
+          index === 0
+            ? {
+                ...axis,
+                scaleLabel: {
+                  ...axis.scaleLabel,
+                  display: true,
+                  labelString: yLabel,
+                },
+              }
+            : axis
+        ),
+      },
+    }
+  }
+
+  private syncNg2ChartAxisLabels(chartDirective: BaseChartDirective): void {
+    const chart = chartDirective?.chart
+    if (!chart?.options?.scales) {
+      return
+    }
+    const xLabel = this.translate.instant('opc_data_xaxis')
+    const yLabel = this.translate.instant('opc_percentage')
+    const xAxis = chart.options.scales.xAxes?.[0]?.scaleLabel
+    const yAxis = chart.options.scales.yAxes?.[0]?.scaleLabel
     if (xAxis) {
-      xAxis.labelString = this.translate.instant('opc_data_xaxis')
+      xAxis.labelString = xLabel
     }
     if (yAxis) {
-      yAxis.labelString = this.translate.instant('opc_percentage')
+      yAxis.labelString = yLabel
     }
   }
 
   private updateChartTranslations(): void {
-    this.updateBarChartAxisLabels(this.barChartOptions1)
-    this.updateBarChartAxisLabels(this.barChartOptions2)
+    this.barChartOptions1 = this.updateBarChartAxisLabels(this.barChartOptions1)
+    this.barChartOptions2 = this.updateBarChartAxisLabels(this.barChartOptions2)
 
     if (this.barChartData2[0]) {
       this.barChartData2[0].label = this.translate.instant('opc_barchart_s')
@@ -233,6 +274,11 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit, OnDestro
     if (this.barChartData2[1]) {
       this.barChartData2[1].label = this.translate.instant('opc_barchart_f')
     }
+
+    this.charts?.forEach((chartDirective) => {
+      this.syncNg2ChartAxisLabels(chartDirective)
+      chartDirective.update()
+    })
 
     if (this.chart3?.data?.datasets) {
       this.chart3.data.datasets[0].label = this.translate.instant('opc_values_in')
@@ -248,7 +294,7 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit, OnDestro
       this.chart3.update()
     }
 
-    this.charts?.forEach((chartDirective) => chartDirective.update())
+    this.cdRef.detectChanges()
   }
 
   createChart3() {
@@ -390,11 +436,11 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit, OnDestro
 
     this.barChartData1 = this.defaultChartData();
     this.barChartLabels1 = [];
-    this.barChartOptions1 = this.defaultChartOptions;
+    this.barChartOptions1 = this.updateBarChartAxisLabels(this.defaultChartOptions);
 
     this.barChartData2 = this.defaultChartData2();
     this.barChartLabels2 = [];
-    this.barChartOptions2 = this.defaultChartOptions2;
+    this.barChartOptions2 = this.updateBarChartAxisLabels(this.defaultChartOptions2);
 
     this.chart3.data.datasets[0].data = [];
     this.chart3.data.datasets[1].data = [];

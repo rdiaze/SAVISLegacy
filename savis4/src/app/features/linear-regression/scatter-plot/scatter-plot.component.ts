@@ -185,14 +185,42 @@ export class ScatterPlotComponent implements OnChanges, AfterViewInit, OnDestroy
   }
 
   private updateChartTranslations(): void {
-    const xAxis = this.scatterChartOptions.scales?.xAxes?.[0]?.scaleLabel;
-    const yAxis = this.scatterChartOptions.scales?.yAxes?.[0]?.scaleLabel;
-    if (xAxis) {
-      xAxis.labelString = this.translate.instant('lr_x_axis');
+    const xLabel = this.translate.instant('lr_x_axis');
+    const yLabel = this.translate.instant('lr_y_axis');
+
+    this.scatterChartOptions = {
+      ...this.scatterChartOptions,
+      scales: {
+        ...this.scatterChartOptions.scales,
+        xAxes: [{
+          ...this.scatterChartOptions.scales.xAxes[0],
+          scaleLabel: {
+            ...this.scatterChartOptions.scales.xAxes[0].scaleLabel,
+            labelString: xLabel,
+          },
+        }],
+        yAxes: [{
+          ...this.scatterChartOptions.scales.yAxes[0],
+          scaleLabel: {
+            ...this.scatterChartOptions.scales.yAxes[0].scaleLabel,
+            labelString: yLabel,
+          },
+        }],
+      },
+    };
+
+    const chartInstance = this.chart?.chart;
+    if (chartInstance?.options?.scales) {
+      const liveXAxis = chartInstance.options.scales.xAxes?.[0]?.scaleLabel;
+      const liveYAxis = chartInstance.options.scales.yAxes?.[0]?.scaleLabel;
+      if (liveXAxis) {
+        liveXAxis.labelString = xLabel;
+      }
+      if (liveYAxis) {
+        liveYAxis.labelString = yLabel;
+      }
     }
-    if (yAxis) {
-      yAxis.labelString = this.translate.instant('lr_y_axis');
-    }
+
     if (this.dataPoints.length) {
       this.updateChartData();
     }
