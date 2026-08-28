@@ -26,16 +26,27 @@
     color:var(--second-col);
   }
 
+  .section {
+    margin-bottom: 2em;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    gap: 2em;
+  }
+
   .lhs, .rhs {
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
   }
   .lhs {
+    margin-left: 1em;
     width: 26em;
+    flex-shrink: 0;
   }
   .rhs {
     flex-grow: 1;
+    min-width: 0;
   }
 
   .lhs p, label{
@@ -81,10 +92,9 @@
   .chart-wrap {
     background-color: var(--eighth-col);
     border-radius: 10px;
-    width: 50%;
-    height: 250px;
-    margin-top: -5rem;
-    margin-left: 40rem;
+    width: 100%;
+    max-width: 40em;
+    height: 10em;
     margin-bottom: 3rem;
   }
 
