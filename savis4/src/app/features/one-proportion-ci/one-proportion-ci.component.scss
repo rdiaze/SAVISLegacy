@@ -31,7 +31,7 @@
     margin-bottom: 2em;
     display: flex;
     flex-flow: row nowrap;
-    align-items: stretch;
+    align-items: flex-start;
     gap: 2em;
     width: 100%;
   }
@@ -72,13 +72,12 @@
   }
 
   .chart-wrap,
-  .chart-wrap2,
-  .chart-wrap3 {
+  .chart-wrap2 {
     background-color: var(--eighth-col);
     border-radius: 10px;
     width: 100%;
-    min-height: 45vh;
-    height: 45vh;
+    height: 250px;
+    min-height: 250px;
     padding: 0.5rem;
     position: relative;
 
@@ -100,7 +99,21 @@
   }
 
   .chart-wrap3 {
+    background-color: var(--eighth-col);
+    border-radius: 10px;
+    width: 100%;
+    min-height: 45vh;
+    height: 45vh;
     margin-top: 1rem;
+    padding: 0.5rem;
+    position: relative;
+
+    canvas,
+    ::ng-deep > div,
+    ::ng-deep canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
   }
 
   input:not([type="range"]){
