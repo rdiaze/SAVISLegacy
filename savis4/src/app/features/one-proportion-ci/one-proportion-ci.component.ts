@@ -437,7 +437,6 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
     return [
       {
         label: '',
-        legend: false,
         backgroundColor: 'green',
         hoverBackgroundColor: 'green',
         data: [],
@@ -445,7 +444,6 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
       },
       {
         label: '',
-        legend: false,
         backgroundColor: 'red',
         hoverBackgroundColor: 'red',
         data: [],
