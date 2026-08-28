@@ -5,6 +5,7 @@ import {ChartDataSets} from 'chart.js';
 import * as XLS from 'xlsx';
 import {Chart} from 'chart.js';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { CoverageChartService } from './services/coverage-chart.service';
 import { SharedService } from '../../services/shared.service';
 import { CSVService } from '../../Utils/csv.service';
@@ -82,6 +83,8 @@ export class OneMeanCIComponent implements OnInit, AfterViewInit, OnDestroy {
   sampleMeansChart: Chart
   confidenceIntervalChart: CoverageChartService
 
+  private langChangeSubscription?: Subscription
+
   sampleRadio: string = 'population'
 
   private _showInputForm = true
@@ -117,6 +120,58 @@ export class OneMeanCIComponent implements OnInit, AfterViewInit, OnDestroy {
     this.createSampleChart()
     this.createSampleMeansChart()
     this.createConfidenceIntervalChart()
+    this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateChartTranslations()
+    })
+  }
+
+  private updateScatterChartLabels(
+    chart: Chart | undefined,
+    datasetLabelKey: string,
+    xAxisKey: string,
+    yAxisKey: string,
+    extraDatasetLabels: Record<number, string> = {}
+  ): void {
+    if (!chart?.data?.datasets) {
+      return
+    }
+    if (chart.data.datasets[0]) {
+      chart.data.datasets[0].label = this.translate.instant(datasetLabelKey)
+    }
+    Object.entries(extraDatasetLabels).forEach(([index, key]) => {
+      const dataset = chart.data.datasets[+index]
+      if (dataset) {
+        dataset.label = this.translate.instant(key)
+      }
+    })
+    const xAxis = chart.options.scales?.xAxes?.[0]?.scaleLabel
+    const yAxis = chart.options.scales?.yAxes?.[0]?.scaleLabel
+    if (xAxis) {
+      xAxis.labelString = this.translate.instant(xAxisKey)
+    }
+    if (yAxis) {
+      yAxis.labelString = this.translate.instant(yAxisKey)
+    }
+    chart.update()
+  }
+
+  private updateChartTranslations(): void {
+    this.updateScatterChartLabels(this.inputDataChart, 'omci_input_data', 'omci_data', 'omci_frequencies')
+    this.updateScatterChartLabels(this.sampleDataChart, 'omci_last_drawn', 'omci_data', 'omci_frequencies')
+    this.updateScatterChartLabels(
+      this.sampleMeansChart,
+      'omci_means_in_interval',
+      'omci_sample_means',
+      'omci_frequencies',
+      { 1: 'omci_means_not_in_interval' }
+    )
+
+    const ciChart = this.confidenceIntervalChart?.chart
+    if (ciChart?.data?.datasets) {
+      ciChart.data.datasets[0].label = this.translate.instant('omci_InInterval')
+      ciChart.data.datasets[1].label = this.translate.instant('omci_NotInInterval')
+      ciChart.update()
+    }
   }
   createConfidenceIntervalChart(): void {
     const ctx = this.confidenceIntervalChartRef.nativeElement.getContext('2d')
@@ -1298,6 +1353,7 @@ export class OneMeanCIComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy():void {
+    this.langChangeSubscription?.unsubscribe()
     this.sharedService.changeData('')
   }
 }

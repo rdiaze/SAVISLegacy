@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core'
 import { TranslateService } from '@ngx-translate/core'
 import { Chart } from 'chart.js'
+import { Subscription } from 'rxjs'
 import { SharedService } from '../../services/shared.service'
 import { CSVService } from '../../Utils/csv.service'
 import type { Paragraph, Table } from 'docx';
@@ -66,6 +67,8 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
   inputChart: Chart
   sampleChart: Chart
 
+  private langChangeSubscription?: Subscription
+
   constructor(
     private translate: TranslateService,
     private sharedService: SharedService
@@ -84,6 +87,35 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
   ngAfterViewInit():void {
     this.createInputChart()
     this.createSampleChart()
+    this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateChartTranslations()
+    })
+  }
+
+  private updateChartTranslations(): void {
+    this.datasets[0].label = this.translate.instant('barChart_inputdata')
+    this.datasets[1].label = this.translate.instant('barChart_sample_drawn')
+    const yLabel = this.translate.instant('barChart_proportions')
+    const xLabel = this.translate.instant('barChart_categories')
+
+    const updateChart = (chart: Chart, datasetLabel: string) => {
+      if (!chart?.data?.datasets?.[0]) {
+        return
+      }
+      chart.data.datasets[0].label = datasetLabel
+      const yAxis = chart.options.scales?.yAxes?.[0]?.scaleLabel
+      const xAxis = chart.options.scales?.xAxes?.[0]?.scaleLabel
+      if (yAxis) {
+        yAxis.labelString = yLabel
+      }
+      if (xAxis) {
+        xAxis.labelString = xLabel
+      }
+      chart.update()
+    }
+
+    updateChart(this.inputChart, this.datasets[0].label)
+    updateChart(this.sampleChart, this.datasets[1].label)
   }
 
   createInputChart(): void {
@@ -675,6 +707,7 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
    * When feature is closed, clear the data in shared service
    */
   ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe()
     this.sharedService.changeData('')
   }
 }

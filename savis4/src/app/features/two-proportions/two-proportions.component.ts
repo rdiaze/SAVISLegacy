@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Chart }  from 'chart.js';
 import {MathService} from 'src/app/Utils/math.service'
 import { ChartDataSets } from 'chart.js';
 import { Sampling } from 'src/app/Utils/sampling';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import type { Paragraph, Table } from 'docx'
 
 @Component({
@@ -11,7 +12,7 @@ import type { Paragraph, Table } from 'docx'
   templateUrl: './two-proportions.component.html',
   styleUrls: ['./two-proportions.component.scss']
 })
-export class TwoProportionsComponent implements OnInit, AfterViewInit {
+export class TwoProportionsComponent implements OnInit, AfterViewInit, OnDestroy {
     static splitByPredicate(iterable: number[], isEven: (num: number) => boolean) {
         throw new Error('Method not implemented.');
     }
@@ -64,6 +65,8 @@ export class TwoProportionsComponent implements OnInit, AfterViewInit {
   chart1: Chart
   chart2: Chart
   chart3: Chart
+
+  private langChangeSubscription?: Subscription
 
   sampleProportionA_chart2: string = 'NaN';
   sampleProportionB_chart2: string = 'NaN';
@@ -150,6 +153,58 @@ export class TwoProportionsComponent implements OnInit, AfterViewInit {
     this.CreateChart1()
     this.CreateChart2()
     this.CreateChart3()
+    this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateChartTranslations()
+    })
+  }
+
+  private updateBarChartTranslations(chart: Chart): void {
+    if (!chart?.data) {
+      return
+    }
+    chart.data.labels = [
+      this.translate.instant('tp_group_A'),
+      this.translate.instant('tp_group_B'),
+    ]
+    chart.data.datasets[0].label = `% ${this.translate.instant('tp_successes')}`
+    chart.data.datasets[1].label = `% ${this.translate.instant('tp_failure')}`
+    chart.update()
+  }
+
+  private updateChartTranslations(): void {
+    this.barChartData1[0].label = `% ${this.translate.instant('tp_successes')}`
+    this.barChartData1[1].label = `% ${this.translate.instant('tp_failure')}`
+    this.barChartData2[0].label = `% ${this.translate.instant('tp_successes')}`
+    this.barChartData2[1].label = `% ${this.translate.instant('tp_failure')}`
+
+    this.updateBarChartTranslations(this.chart1)
+    this.updateBarChartTranslations(this.chart2)
+
+    if (!this.chart3?.data?.datasets) {
+      return
+    }
+
+    const xAxis = this.chart3.options.scales?.xAxes?.[0]?.scaleLabel
+    const yAxis = this.chart3.options.scales?.yAxes?.[0]?.scaleLabel
+    if (xAxis) {
+      xAxis.labelString = this.translate.instant('tp_diff_mean')
+    }
+    if (yAxis) {
+      yAxis.labelString = this.translate.instant('tp_freq')
+    }
+
+    if (this.simulations?.length) {
+      this.buildDiffOfProp()
+    } else {
+      const diffLabel = this.translate.instant('tp_differences')
+      this.chart3.data.datasets[0].label = diffLabel
+      this.chart3.data.datasets[1].label = diffLabel
+      this.chart3.update()
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe()
   }
 
   CreateChart1(): void {

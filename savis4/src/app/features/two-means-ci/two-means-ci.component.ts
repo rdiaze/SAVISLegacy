@@ -10,6 +10,7 @@ import {
 import { ChartDataSets, ChartType, Chart, ChartPoint } from 'chart.js';
 
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 import { Color, Label } from 'ng2-charts';
 import { chatClass } from 'src/app/Utils/stacked-dot';
@@ -46,6 +47,8 @@ export class TwoMeansCIComponent
   chart3: any;
   chart4: any;
   chart5: any;
+
+  private langChangeSubscription?: Subscription
   minmax: any;
   stDev1: number = 0;
   stDev2: number = 0;
@@ -546,6 +549,28 @@ export class TwoMeansCIComponent
   }
   ngAfterViewInit() {
     this.createChart5();
+    this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateChartTranslations();
+    });
+  }
+
+  private updateChartTranslations(): void {
+    this.datasets[0].label = this.translate.instant('tm_group1');
+    this.datasets[1].label = this.translate.instant('tm_group2');
+
+    if (this.chart1?.chart?.data?.datasets?.[0]) {
+      this.chart1.chart.data.datasets[0].label = this.datasets[0].label;
+      this.chart1.chart.update(0);
+    }
+    if (this.chart2?.chart?.data?.datasets?.[0]) {
+      this.chart2.chart.data.datasets[0].label = this.datasets[1].label;
+      this.chart2.chart.update(0);
+    }
+    if (this.chart5?.data?.datasets) {
+      this.chart5.data.datasets[0].label = this.translate.instant('tpci_values_in_interval');
+      this.chart5.data.datasets[1].label = this.translate.instant('tpci_values_not_in_interval');
+      this.chart5.update();
+    }
   }
 
   updateLastChart() {
@@ -663,7 +688,8 @@ export class TwoMeansCIComponent
   }
 
   ngOnDestroy(): void {
-      this.sharedService.changeData('')
+    this.langChangeSubscription?.unsubscribe();
+    this.sharedService.changeData('')
   }
 
   get isExportEnabled(): boolean {

@@ -1,8 +1,9 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartType, Chart } from 'chart.js';
 import { ChartDataSets } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { Subscription } from 'rxjs';
 import { MathService } from 'src/app/Utils/math.service';
 import { SamplingService } from 'src/app/Utils/sampling.service';
 import { SummaryService } from 'src/app/Utils/summaries.service';
@@ -13,7 +14,7 @@ import { SummaryService } from 'src/app/Utils/summaries.service';
   styleUrls: ['./one-proportion-ci.component.scss']
 })
 
-export class OneProportionCIComponent implements OnInit, AfterViewInit {
+export class OneProportionCIComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor( 
     private cdRef: ChangeDetectorRef,
     private translate: TranslateService
@@ -22,7 +23,10 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
   @ViewChild('successInput', { static: true }) successInput!: ElementRef<HTMLInputElement>;
   @ViewChild('failureInput', { static: true }) failureInput!: ElementRef<HTMLInputElement>;
   @ViewChild(BaseChartDirective) chart!: BaseChartDirective;
+  @ViewChildren(BaseChartDirective) charts!: QueryList<BaseChartDirective>;
   @ViewChild('chart3') chart3Ref: ElementRef<HTMLCanvasElement>
+
+  private langChangeSubscription?: Subscription
 
   failure: number
   success: number
@@ -199,6 +203,52 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.createChart3()
+    this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateChartTranslations()
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe()
+  }
+
+  private updateBarChartAxisLabels(options: any): void {
+    const xAxis = options?.scales?.xAxes?.[0]?.scaleLabel
+    const yAxis = options?.scales?.yAxes?.[0]?.scaleLabel
+    if (xAxis) {
+      xAxis.labelString = this.translate.instant('opc_data_xaxis')
+    }
+    if (yAxis) {
+      yAxis.labelString = this.translate.instant('opc_percentage')
+    }
+  }
+
+  private updateChartTranslations(): void {
+    this.updateBarChartAxisLabels(this.barChartOptions1)
+    this.updateBarChartAxisLabels(this.barChartOptions2)
+
+    if (this.barChartData2[0]) {
+      this.barChartData2[0].label = this.translate.instant('opc_barchart_s')
+    }
+    if (this.barChartData2[1]) {
+      this.barChartData2[1].label = this.translate.instant('opc_barchart_f')
+    }
+
+    if (this.chart3?.data?.datasets) {
+      this.chart3.data.datasets[0].label = this.translate.instant('opc_values_in')
+      this.chart3.data.datasets[1].label = this.translate.instant('opc_values_out')
+      const xAxis = this.chart3.options.scales.xAxes[0]?.scaleLabel
+      const yAxis = this.chart3.options.scales.yAxes[0]?.scaleLabel
+      if (xAxis) {
+        xAxis.labelString = this.translate.instant('opc_data_xaxis')
+      }
+      if (yAxis) {
+        yAxis.labelString = this.translate.instant('opc_frequency')
+      }
+      this.chart3.update()
+    }
+
+    this.charts?.forEach((chartDirective) => chartDirective.update())
   }
 
   createChart3() {

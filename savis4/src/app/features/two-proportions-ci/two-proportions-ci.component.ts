@@ -2,11 +2,13 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Chart, ChartPoint } from 'chart.js';
+import { Subscription } from 'rxjs';
 import { MathService } from 'src/app/Utils/math.service';
 
 @Component({
@@ -14,7 +16,7 @@ import { MathService } from 'src/app/Utils/math.service';
   templateUrl: './two-proportions-ci.component.html',
   styleUrls: ['./two-proportions-ci.component.scss'],
 })
-export class TwoProportionsCIComponent implements AfterViewInit {
+export class TwoProportionsCIComponent implements AfterViewInit, OnDestroy {
   @ViewChild('chart1') chart1Ref: ElementRef<HTMLCanvasElement>;
   @ViewChild('chart2') chart2Ref: ElementRef<HTMLCanvasElement>;
   @ViewChild('chart3') chart3Ref: ElementRef<HTMLCanvasElement>;
@@ -22,6 +24,8 @@ export class TwoProportionsCIComponent implements AfterViewInit {
   chart1: Chart;
   chart2: Chart;
   chart3: Chart;
+
+  private langChangeSubscription?: Subscription
 
   factor: number = 10;
 
@@ -73,6 +77,36 @@ export class TwoProportionsCIComponent implements AfterViewInit {
     this.createChart1();
     this.createChart2();
     this.createChart3();
+    this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateChartTranslations();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe();
+  }
+
+  private updateBarChartTranslations(chart: Chart): void {
+    if (!chart?.data) {
+      return;
+    }
+    chart.data.labels = [
+      this.translate.instant('tpci_group_A'),
+      this.translate.instant('tpci_group_B'),
+    ];
+    chart.data.datasets[0].label = '% ' + this.translate.instant('tpci_successes');
+    chart.data.datasets[1].label = '% ' + this.translate.instant('tpci_failures');
+    chart.update();
+  }
+
+  private updateChartTranslations(): void {
+    this.updateBarChartTranslations(this.chart1);
+    this.updateBarChartTranslations(this.chart2);
+    if (this.chart3?.data?.datasets) {
+      this.chart3.data.datasets[0].label = this.translate.instant('tpci_values_in_interval');
+      this.chart3.data.datasets[1].label = this.translate.instant('tpci_values_not_in_interval');
+      this.chart3.update();
+    }
   }
 
   createChart1() {

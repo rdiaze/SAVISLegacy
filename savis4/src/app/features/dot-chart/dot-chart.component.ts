@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Chart } from 'chart.js';
+import { Subscription } from 'rxjs';
 import { SharedService } from '../../services/shared.service';
 import { CSVService } from '../../Utils/csv.service';
 import type { Paragraph, Table } from 'docx';
@@ -70,6 +71,8 @@ export class DotChartComponent implements AfterViewInit, OnInit, OnDestroy {
 
   sampleMeansChart: Chart
 
+  private langChangeSubscription?: Subscription
+
   sampleRadio: string = 'population'
 
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef
@@ -94,7 +97,51 @@ export class DotChartComponent implements AfterViewInit, OnInit, OnDestroy {
     this.createInputChart()
     this.createSampleChart()
     this.createSampleMeansChart()
+    this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateChartTranslations()
+    })
+  }
 
+  private updateScatterChartLabels(
+    chart: Chart | undefined,
+    datasetLabelKey: string,
+    xAxisKey: string,
+    yAxisKey: string,
+    extraDatasetLabels: Record<number, string> = {}
+  ): void {
+    if (!chart?.data?.datasets) {
+      return
+    }
+    if (chart.data.datasets[0]) {
+      chart.data.datasets[0].label = this.translate.instant(datasetLabelKey)
+    }
+    Object.entries(extraDatasetLabels).forEach(([index, key]) => {
+      const dataset = chart.data.datasets[+index]
+      if (dataset) {
+        dataset.label = this.translate.instant(key)
+      }
+    })
+    const xAxis = chart.options.scales?.xAxes?.[0]?.scaleLabel
+    const yAxis = chart.options.scales?.yAxes?.[0]?.scaleLabel
+    if (xAxis) {
+      xAxis.labelString = this.translate.instant(xAxisKey)
+    }
+    if (yAxis) {
+      yAxis.labelString = this.translate.instant(yAxisKey)
+    }
+    chart.update()
+  }
+
+  private updateChartTranslations(): void {
+    this.updateScatterChartLabels(this.inputDataChart, 'dotPlot_input_data', 'dotPlot_data', 'dotPlot_frequencies')
+    this.updateScatterChartLabels(this.sampleDataChart, 'dotPlot_last_drawn', 'dotPlot_data', 'dotPlot_frequencies')
+    this.updateScatterChartLabels(
+      this.sampleMeansChart,
+      'dotPlot_means_in_interval',
+      'dotPlot_sample_means',
+      'dotPlot_frequencies',
+      { 1: 'dotPlot_means_not_in_interval' }
+    )
   }
 
   createInputChart(): void {
@@ -983,6 +1030,7 @@ export class DotChartComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe()
     this.sharedService.changeData('')
   }
 

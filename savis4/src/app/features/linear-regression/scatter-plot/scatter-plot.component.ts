@@ -1,8 +1,9 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, AfterViewInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ChartDataSets, ChartOptions, ChartType, Chart, ChartData, ChartLegendItem, ChartLegendLabelItem } from 'chart.js'; // Change this line
 import { errorBarsPlugin, errorSquaresPlugin, movableReferenceLinePlugin } from '../../../Utils/chartjs-plugin';
 import { BaseChartDirective } from 'ng2-charts';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 declare module 'chart.js' {
   interface ChartDataSets {
@@ -22,7 +23,7 @@ declare module 'chart.js' {
   templateUrl: './scatter-plot.component.html',
   styleUrls: ['./scatter-plot.component.scss']
 })
-export class ScatterPlotComponent implements OnChanges {
+export class ScatterPlotComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() dataPoints: { x: number, y: number }[] = [];
   scatterChartData: ChartDataSets[] = [];
   @Input() scatterChartOptions: ChartOptions = {};
@@ -35,6 +36,7 @@ export class ScatterPlotComponent implements OnChanges {
   private intercept: number = 0;
   private keyboardListener?: (event: KeyboardEvent) => void;
   public regressionFormula: string = '';
+  private langChangeSubscription?: Subscription;
 
   public activeLine: 'regression' | 'reference' = 'reference';
 
@@ -73,7 +75,7 @@ export class ScatterPlotComponent implements OnChanges {
           },
           scaleLabel: {
             display: true,
-            labelString: 'X Axis',
+            labelString: this.translate.instant('lr_x_axis'),
             fontSize: 14,
             fontStyle: 'bold'
           }
@@ -91,7 +93,7 @@ export class ScatterPlotComponent implements OnChanges {
           },
           scaleLabel: {
             display: true,
-            labelString: 'Y Axis',
+            labelString: this.translate.instant('lr_y_axis'),
             fontSize: 14,
             fontStyle: 'bold'
           }
@@ -107,7 +109,7 @@ export class ScatterPlotComponent implements OnChanges {
         displayColors: false,
         callbacks: {
           title: (tooltipItems: any[]) => {
-            return `Data Point`;
+            return this.translate.instant('lr_data_point');
           },
           label: (tooltipItem: any, data: any) => {
             const datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
@@ -165,6 +167,10 @@ export class ScatterPlotComponent implements OnChanges {
   }
 
   ngAfterViewInit(): void {
+    this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateChartTranslations();
+    });
+
     if (!this.chart) return;
     this.chart.update();
 
@@ -176,6 +182,21 @@ export class ScatterPlotComponent implements OnChanges {
 
     this.keyboardListener = this.onKeyDown.bind(this);
     window.addEventListener('keydown', this.keyboardListener);
+  }
+
+  private updateChartTranslations(): void {
+    const xAxis = this.scatterChartOptions.scales?.xAxes?.[0]?.scaleLabel;
+    const yAxis = this.scatterChartOptions.scales?.yAxes?.[0]?.scaleLabel;
+    if (xAxis) {
+      xAxis.labelString = this.translate.instant('lr_x_axis');
+    }
+    if (yAxis) {
+      yAxis.labelString = this.translate.instant('lr_y_axis');
+    }
+    if (this.dataPoints.length) {
+      this.updateChartData();
+    }
+    this.chart?.update();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -193,6 +214,7 @@ export class ScatterPlotComponent implements OnChanges {
   }
 
   ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe();
     Chart.plugins.unregister(errorBarsPlugin);
     Chart.plugins.unregister(errorSquaresPlugin);
     if (this.keyboardListener) {
@@ -223,7 +245,7 @@ export class ScatterPlotComponent implements OnChanges {
     // Create dataset for the reference line
     const referenceLineDataset: ChartDataSets = {        
       type: 'line',
-      label: 'Reference Line',
+      label: this.translate.instant('lr_reference_line'),
       data: this.dataPoints.map(p => ({ x: p.x, y: m * p.x + b})),
       borderColor: 'rgb(99, 255, 120)',
       backgroundColor: 'rgb(99, 255, 120)',

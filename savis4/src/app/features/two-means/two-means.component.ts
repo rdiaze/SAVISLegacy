@@ -6,7 +6,8 @@ import { Sampling } from 'src/app/Utils/sampling';
 import { TailchartService } from 'src/app/Utils/tailchart.service';
 import * as XLS from 'xlsx';
 
-import { TranslateService } from '@ngx-translate/core'; 
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs'; 
 import { SharedService } from '../../services/shared.service';
 import { MathService } from '../../Utils/math.service';
 import type { Paragraph, Table } from 'docx';
@@ -74,6 +75,8 @@ export class TwoMeansComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('diffChart') chart5Ref: ElementRef<HTMLCanvasElement>
 
   chart5: Chart
+
+  private langChangeSubscription?: Subscription
 
   simulations: any[] = []
 
@@ -203,6 +206,37 @@ export class TwoMeansComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.createChart5()
+    this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateChartTranslations()
+    })
+  }
+
+  private updateChartTranslations(): void {
+    if (this.chart1?.chart?.data?.datasets?.[0]) {
+      this.chart1.chart.data.datasets[0].label = this.translate.instant('tm_group1')
+      this.chart1.chart.update(0)
+    }
+    if (this.chart2?.chart?.data?.datasets?.[0]) {
+      this.chart2.chart.data.datasets[0].label = this.translate.instant('tm_group2')
+      this.chart2.chart.update(0)
+    }
+    if (!this.chart5?.data?.datasets) {
+      return
+    }
+    const diff = this.translate.instant('tm_differences')
+    const min = this.minTailValInput ?? 0
+    const max = this.maxTailValInput ?? 1
+    this.chart5.data.datasets[0].label = `${min} < ${diff} < ${max}`
+    this.chart5.data.datasets[1].label = `${diff} ≤ ${min} ∪ ${max} ≤ ${diff}`
+    const xAxis = this.chart5.options.scales?.xAxes?.[0]?.scaleLabel
+    const yAxis = this.chart5.options.scales?.yAxes?.[0]?.scaleLabel
+    if (xAxis) {
+      xAxis.labelString = this.translate.instant('tm_diff_mean')
+    }
+    if (yAxis) {
+      yAxis.labelString = this.translate.instant('tm_freq')
+    }
+    this.chart5.update()
   }
 
   createChart5() {
@@ -779,6 +813,7 @@ export class TwoMeansComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe()
     this.sharedService.changeData('')
   }
 }
