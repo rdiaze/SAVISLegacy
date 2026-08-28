@@ -75,22 +75,7 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
   public barChartType1: ChartType = 'bar';
   public barChartType2: ChartType = 'scatter';
 
-  public barChartData1: ChartDataSets[] =[
-    {
-      label: this.translate.instant('opc_barchart_s'),
-      backgroundColor: 'green',
-      hoverBackgroundColor: 'green',
-      data: [],
-      borderColor: 'green'
-    },
-    {
-      label: this.translate.instant('opc_barchart_f'),
-      backgroundColor: 'red',
-      hoverBackgroundColor: 'red',
-      data: [],
-      borderColor: 'red'
-    },
-  ];
+  public barChartData1: ChartDataSets[] = this.createInputChartDatasets();
  public barChartLabels1: any = [];
 
   public barChartData2: ChartDataSets[] =[
@@ -122,9 +107,8 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
           return this.translate.instant('opc_data_xaxis')
         },
         label: (tooltipItem: any, data: any) => {
-          const datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
           const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-          return `${datasetLabel}: ${value}%`; // Add your custom text
+          return `${value}%`;
         }
       }
     },
@@ -286,19 +270,7 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
   loadData() {
     let numsuccess = this.getInputValue(this.successInput);
     let numfailure = this.getInputValue(this.failureInput);
-    this.barChartData1 = this.barChartData1 = [
-      { 
-        data: [], 
-        label: this.translate.instant('opc_barchart_s'),
-        backgroundColor: 'green', 
-        hoverBackgroundColor: 'green', 
-      }, 
-      { 
-        data: [], 
-        label: this.translate.instant('opc_barchart_f'), 
-        backgroundColor: 'red',
-        hoverBackgroundColor: 'red',
-      }];
+    this.barChartData1 = this.createInputChartDatasets();
     if (numsuccess <= 0 || numfailure <= 0) {
       alert('The value of successes and failures must be greater than 0');
     }
@@ -387,9 +359,8 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
     tooltips: {
       callbacks: {
         label: (tooltipItem: any, data: any) => {
-          const datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
           const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-          return `${datasetLabel}: ${value}%`; // Add your custom text
+          return `${value}%`;
         }
       }
     },
@@ -462,23 +433,29 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
   }
 
   
-  private defaultChartData(): Chart.ChartDataSets[]{
+  private createInputChartDatasets(): Chart.ChartDataSets[] {
     return [
       {
-        label: this.translate.instant('opc_barchart_s'),
+        label: '',
+        legend: false,
         backgroundColor: 'green',
         hoverBackgroundColor: 'green',
         data: [],
         borderColor: 'green'
       },
       {
-        label: this.translate.instant('opc_barchart_f'),
+        label: '',
+        legend: false,
         backgroundColor: 'red',
         hoverBackgroundColor: 'red',
         data: [],
         borderColor: 'red'
       },
     ]
+  }
+
+  private defaultChartData(): Chart.ChartDataSets[]{
+    return this.createInputChartDatasets();
   }
 
   private defaultChartData2(): Chart.ChartDataSets[]{

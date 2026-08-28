@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnChanges, OnDestroy, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Chart } from 'chart.js';
+import { Subscription } from 'rxjs';
 import { oneProportionDynamicBubbleSize, oneProportionOffset, oneProportionSampleLegendColor } from '../../Utils/chartjs-plugin';
 import type { Paragraph, Table } from 'docx';
 
@@ -9,7 +10,7 @@ import type { Paragraph, Table } from 'docx';
   templateUrl: './one-proportion.component.html',
   styleUrls: ['./one-proportion.component.scss']
 })
-export class OneProportionComponent implements AfterViewInit, OnChanges{
+export class OneProportionComponent implements AfterViewInit, OnChanges, OnDestroy {
   /**
    * number of coins to be flipped
    */
@@ -97,6 +98,7 @@ export class OneProportionComponent implements AfterViewInit, OnChanges{
    */
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>
 
+  private langChangeSubscription?: Subscription
 
   constructor(
     private translate: TranslateService,
@@ -114,6 +116,32 @@ export class OneProportionComponent implements AfterViewInit, OnChanges{
    */
   ngAfterViewInit(): void {
       this.createChart()
+      this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
+        this.updateChartTranslations()
+      })
+  }
+
+  /**
+   * Update chart legend, axis labels, and tooltips for the active language.
+   */
+  private updateChartTranslations(): void {
+    if (!this.chart?.data?.datasets) {
+      return
+    }
+
+    const datasets = this.chart.data.datasets
+    if (datasets[0]) {
+      datasets[0].label = this.translate.instant('op_bar_sample')
+    }
+    if (datasets[1]) {
+      datasets[1].label = this.translate.instant('op_bar_binomial')
+    }
+    if (datasets[2]) {
+      datasets[2].label = this.translate.instant('op_bar_selected')
+    }
+
+    this.updateAxisLabels()
+    this.chart.update()
   }
 
   /**
@@ -681,6 +709,7 @@ export class OneProportionComponent implements AfterViewInit, OnChanges{
    */
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnDestroy() {
+    this.langChangeSubscription?.unsubscribe()
     Chart.pluginService.unregister(oneProportionOffset)
     Chart.pluginService.unregister(oneProportionSampleLegendColor)
     Chart.pluginService.unregister(oneProportionDynamicBubbleSize)

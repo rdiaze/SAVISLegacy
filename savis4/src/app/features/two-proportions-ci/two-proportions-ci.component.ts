@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Chart, ChartPoint } from 'chart.js';
+import { MathService } from 'src/app/Utils/math.service';
 
 @Component({
   selector: 'app-two-proportions-ci',
@@ -54,6 +55,10 @@ export class TwoProportionsCIComponent implements AfterViewInit {
   upperBound = 'NaN';
 
   constructor(public translate: TranslateService) {}
+
+  private formatProportion(value: number): string {
+    return MathService.roundToPlaces(value, 2).toString();
+  }
 
   get isExportEnabled(): boolean {
     return this.inputProportionsGroupA !== 'NaN' && 
@@ -257,18 +262,11 @@ export class TwoProportionsCIComponent implements AfterViewInit {
     } else {
       this.resetLastChart();
 
-      this.inputProportionsGroupA = (
-        numASuccess /
-        (numASuccess + numAFailures)
-      ).toString();
-      this.inputProportionsGroupB = (
-        numBSuccesses /
-        (numBSuccesses + numBFailures)
-      ).toString();
-      this.inputDifferenceProportions = (
-        Number(this.inputProportionsGroupA) -
-        Number(this.inputProportionsGroupB)
-      ).toString();
+      const propA = numASuccess / (numASuccess + numAFailures);
+      const propB = numBSuccesses / (numBSuccesses + numBFailures);
+      this.inputProportionsGroupA = this.formatProportion(propA);
+      this.inputProportionsGroupB = this.formatProportion(propB);
+      this.inputDifferenceProportions = this.formatProportion(propA - propB);
 
       this.setProportions(this.chart1, {
         numASuccess,
@@ -351,13 +349,13 @@ export class TwoProportionsCIComponent implements AfterViewInit {
         this.simBFailures = sampleBFailure;
         this.simBSuccesses = sampleBSuccess;
 
-        this.simulationProportionGroupA = sampleAProportion.toString();
-        this.simulationProportionGroupB = sampleBProportion.toString();
-        this.simulationDifferenceProportions = (
+        this.simulationProportionGroupA = this.formatProportion(sampleAProportion);
+        this.simulationProportionGroupB = this.formatProportion(sampleBProportion);
+        this.simulationDifferenceProportions = this.formatProportion(
           sampleAProportion - sampleBProportion
-        ).toString();
-        this.simMean = this.mean(this.simulations).toString();
-        this.simStdDev = this.stddev(this.simulations).toString();
+        );
+        this.simMean = this.formatProportion(this.mean(this.simulations));
+        this.simStdDev = this.formatProportion(this.stddev(this.simulations));
         this.simTotal = this.simulations.length.toString();
 
         this.updateLastChart();
@@ -389,8 +387,10 @@ export class TwoProportionsCIComponent implements AfterViewInit {
       }
     );
 
-    this.lowerBound = temp[lower].toString();
-    this.upperBound = temp[upper >= temp.length ? upper - 1 : upper].toString();
+    this.lowerBound = this.formatProportion(temp[lower]);
+    this.upperBound = this.formatProportion(
+      temp[upper >= temp.length ? upper - 1 : upper]
+    );
 
     const shift = temp.length < 500 ? 0 : 0;
     this.setScale(this.chart3, temp[0] - shift, temp[temp.length - 1] + shift);
